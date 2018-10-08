@@ -48,7 +48,6 @@ header
 
 .song__name
 {
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -74,7 +73,7 @@ header
 
 .song__control
 {
-    margin-top: 20px;
+    margin-top: 15px;
     display: flex;
     white-space: nowrap;
 }
@@ -352,7 +351,7 @@ main
 {
     height: 100%;
     max-width: 1024px;
-    min-width: 280px;
+    min-width: 300px;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -366,8 +365,6 @@ main
 {
     background: #FAFAFA;
     border-radius: 20px;
-    word-break: break-word;
-    word-wrap: break-word;
     display: grid;
     min-height: 171px;
     position: relative;
