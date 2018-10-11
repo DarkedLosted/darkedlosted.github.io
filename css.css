@@ -16,6 +16,11 @@ header
     border-bottom: 1px solid #dedddb;
 }
 
+.hidden
+{
+    display: none;
+}
+
 .card__next
 {
     display: none;
@@ -282,9 +287,9 @@ header
     font-weight: bold;
 }
 
-.checked
+.selected
 {
-    color: black !important;
+    color: black;
     opacity: 1;
 }
 
@@ -293,6 +298,12 @@ header
     opacity: 0.6;
     display: table-cell;
     padding: 37px 28px 37px 0;
+    cursor: pointer;
+}
+
+.tabs-menu__tab:hover
+{
+    opacity: 1;
 }
 
 .link

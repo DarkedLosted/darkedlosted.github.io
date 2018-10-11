@@ -8,7 +8,10 @@
         <link rel="stylesheet" href="css.css">
         <script src="js.js" defer></script>
         <script src="gestures.js" defer></script>
-        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js" defer></script>
+        <link rel="stylesheet" href="video.css">
+            <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" defer></script>
+            <script src="video.js" defer></script>
     </head>
     <body>
         <header>
@@ -16,7 +19,7 @@
                 <ul class='tabs-menu'>
                     <img class='logo' src="icons/yandex.png" alt="yandex">
                     <li class='tabs-menu__tab'>
-                        <a class='link checked' href='#'>События</a>
+                        <a class='link selected tab_events' href='#'>События</a>
                     </li>
                     <li class='tabs-menu__tab'>
                         <a class='link' href='#'>Сводка</a>
@@ -26,6 +29,9 @@
                     </li>
                     <li class='tabs-menu__tab'>
                         <a class='link' href='#'>Сценарии</a>
+                    </li>
+                    <li class='tabs-menu__tab'>
+                        <a class='link tab_video'>Видеонаблюдение</a>
                     </li>
                 </ul>
                 <img class='mobile-menu-icon' src="icons/icon_list_m.png" alt="triple line in column" onclick="menuToggle();">
@@ -46,8 +52,7 @@
                     <a class='link' href='#'>Сценарии</a>
                 </li>
             </ul>
-
-        <main>
+        <main id='events'>
             <div class='header'>Лента Событий</div>
             <div class='feed'>
                 <template id="tmpl">
@@ -91,6 +96,52 @@
                         </div>
                     </div>
                 </template>
+            </div>
+        </main>
+        <main id="video" class="hidden">
+            <div class="video-container">
+                <div class="video__player">
+                    <video id="video-1" class="video" preload="metadata" muted autoplay></video>
+                    <div class="player__panel">
+                        Contrast:
+                        <input type="range" min='1' max='100' value='10' class="input__contrast">
+                        Brightness:
+                        <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        <button class="player__button">All camers</button>
+                    </div>
+                </div>
+                <div class="video__player">
+                    <video id="video-2" class="video" preload="metadata" muted autoplay></video>
+                    <div class="player__panel">
+                        Contrast:
+                        <input type="range" min='1' max='100' value='10' class="input__contrast">
+                        Brightness:
+                        <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        <button class="player__button">All camers</button>
+                    </div>
+                </div>
+                <div class="video__player">
+                    <video id="video-3" class="video" preload="metadata" muted autoplay></video>
+                    <div class="player__panel">
+                        Contrast:
+                        <input type="range" min='1' max='100' value='10' class="input__contrast">
+                        Brightness:
+                        <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        <button class="player__button">All camers</button>
+                    </div>
+                </div>
+                <div class="video__player">
+                    <video id="video-4" class="video" preload="metadata" muted autoplay></video>
+                    <div class="player__panel">
+                        Contrast:
+                        <input type="range" min='1' max='100' value='10' class="input__contrast">
+                        Brightness:
+                        <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        <button class="player__button">All camers</button>
+                    </div>
+                    <canvas id="tutorial" width="150" height="50"></canvas>s
+                </div>
+
             </div>
         </main>
         <footer>
