@@ -1,8 +1,13 @@
 function initVideo(video, url) {
     if (Hls.isSupported()) {
-        var hls = new Hls({liveDurationInfinity: true});
+        var hls = new Hls({
+            liveDurationInfinity: true,
+            autoStartLoad: true
+        });
         hls.loadSource(url);
         hls.attachMedia(video);
+        hls.firstLevel = 1;
+        hls.loadLevel = -1;
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
             video.play();
         });
@@ -58,6 +63,8 @@ function initPlayerControls() {
         };
 
         video.onclick = function() {
+
+            //videoClick(video);
             video.parentNode.classList.add('video-opened');
             video.muted = false;
             analyzer.connectVideo(video);
@@ -75,6 +82,27 @@ function initPlayerControls() {
     });
 }
 
+function videoClick(video) {
+    var videoContainer = video.parentNode,
+        width = videoContainer.offsetWidth,
+        height = videoContainer.offsetHeight,
+        videoPosX = videoContainer.getBoundingClientRect().x,
+        videoPosY = videoContainer.getBoundingClientRect().y,
+        viewWidth = document.body.clientWidth,
+        viewHeight = document.body.clientHeight,
+        ratioX, ratioY, locX, locY;
+
+
+    ratioX = viewWidth / width;
+    ratioY = viewHeight / height;
+    locX = Math.sqrt( Math.pow((viewWidth / 4) - videoPosX, 2));
+    locY = Math.sqrt(Math.pow(videoPosY - (viewHeight / 4), 2));
+    console.log(videoPosX,locX);
+
+    videoContainer.style.transform = `scale(${ratioX}, ${ratioY}) translate(${locX}px, ${locY}px)`;
+
+}
+
 function audioAnalyzer() {
     this.context = this.context || new (window.AudioContext || window.webkitAudioContext)();
     this.node = this.node || this.context.createScriptProcessor(2048, 1, 1);
@@ -86,29 +114,34 @@ function audioAnalyzer() {
     this.bands = new Uint8Array(this.analyser.frequencyBinCount);
 
     this.connectVideo = function(video) {
+        console.log(this.context)
         this.source = this.context.createMediaElementSource(video);
+        console.log(this.context)
+        console.log(this.source)
+
             this.source.connect(this.analyser);
             this.analyser.connect(this.node);
             this.node.connect(this.context.destination);
             this.source.connect(this.context.destination);
 
-            this.node.onaudioprocess = function () {
-                this.analyser.getByteFrequencyData(this.bands);
+                var canvas = video.parentNode.querySelector('.canvas'),
+                    ctx = canvas.getContext('2d');
 
-                setInterval(draw(this.bands, video), 150);
+        this.node.addEventListener('audioprocess', function () {
+            this.analyser.getByteFrequencyData(this.bands);
 
-            }.bind(this);
+            setInterval(draw(this.bands, canvas, ctx), 150);
+
+        }.bind(this));
     };
 
     return this;
 }
 
-function draw(bands, video) {
+function draw(bands, canvas, ctx) {
     //window.webkitRequestAnimationFrame(draw);
 
-    var canvas = video.parentNode.querySelector('.canvas'),
-        ctx = canvas.getContext('2d'),
-        bars = 256,
+    var bars = 256,
         rectX,
         rectWidth,rectHeight;
 
@@ -130,21 +163,21 @@ function draw(bands, video) {
 
     initVideo(
         document.getElementById('video-1'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fsosed%2Fmaster.m3u8'
+        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A8000%2Fstreams%2Fsosed%2Fmaster.m3u8'
     );
 
     initVideo(
         document.getElementById('video-2'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fcat%2Fmaster.m3u8'
+        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A8000%2Fstreams%2Fcat%2Fmaster.m3u8'
     );
 
     initVideo(
         document.getElementById('video-3'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fdog%2Fmaster.m3u8'
+        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A8000%2Fstreams%2Fdog%2Fmaster.m3u8'
     );
 
     initVideo(
         document.getElementById('video-4'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fhall%2Fmaster.m3u8'
+        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A8000%2Fstreams%2Fhall%2Fmaster.m3u8'
     );
 })();

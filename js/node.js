@@ -5,7 +5,7 @@ const app = express();
 app
   .use(cors())
   .use(express.static('./'))
-  .get('/streams/:path/:source', function (req, res, next) {
-    res.json({msg: 'This is CORS-enabled for all origins!'})
+  .get('/', function(req, res) {
+      res.sendFile('index.html');
   })
-  .listen(2222);
+  .listen(8000);
