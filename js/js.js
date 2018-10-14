@@ -180,98 +180,115 @@ function init() {
             stats: 'icons/stats.svg',
         };
 
-    data.events.map(function(elem) {
-        var template = document.importNode(tmpl, true),
-            card = template.content.querySelector(".card"),
-            icon = template.content.querySelector(".card__icon"),
-            title = template.content.querySelector(".card__title"),
-            source = template.content.querySelector(".card__source"),
-            time = template.content.querySelector(".card__time"),
-            description = template.content.querySelector(".card__description"),
-            textDescriptionNode = document.createElement('span'),
-            image = template.content.querySelector(".additions__image"),
-            temperature = template.content.querySelector(".additions__temperature"),
-            humidity = template.content.querySelector(".additions__humidity"),
-            cardCross = card.querySelector(".card__cross"),
-            top = template.content.querySelector('.additions__top'),
-            cardClassList = elem.type === 'critical' ? ' error card_size_' : ' card_size_';
+    fetch('http://localhost:8000/api/events')
+        .then(data => {
+            return data.json()
+        })
+        .then(res => {
+            res.map(function(elem) {
+                var template = document.importNode(tmpl, true),
+                    card = template.content.querySelector(".card"),
+                    icon = template.content.querySelector(".card__icon"),
+                    title = template.content.querySelector(".card__title"),
+                    source = template.content.querySelector(".card__source"),
+                    time = template.content.querySelector(".card__time"),
+                    description = template.content.querySelector(".card__description"),
+                    textDescriptionNode = document.createElement('span'),
+                    image = template.content.querySelector(".additions__image"),
+                    temperature = template.content.querySelector(".additions__temperature"),
+                    humidity = template.content.querySelector(".additions__humidity"),
+                    cardCross = card.querySelector(".card__cross"),
+                    top = template.content.querySelector('.additions__top'),
+                    cardClassList = elem.type === 'critical' ? ' error card_size_' : ' card_size_';
 
-        card.classList += cardClassList + elem.size;
-        icon.src = icons[elem.icon];
-        icon.alt = elem.icon;
-        title.innerHTML = elem.title;
-        source.innerHTML = elem.source;
-        time.innerHTML = elem.time;
-        textDescriptionNode.innerHTML = elem.description;
-        description.insertBefore(textDescriptionNode, description.firstChild);
-        temperature.innerHTML = elem.data && elem.data.temperature ?
-            'Температура: ' + (elem.data.temperature + ' C').bold() :
-            '';
-        humidity.innerHTML = elem.data && elem.data.temperature ? '' +
-            'Влажность: ' + (elem.data.humidity + '%').bold() :
-            '';
-        image.src = elem.data && elem.data.image ?
-            elem.data.image :
-            (elem.data && elem.data.type ? 'icons/Richdata.png' : '');
+                card.classList += cardClassList + elem.size;
+                icon.src = icons[elem.icon];
+                icon.alt = elem.icon;
+                title.innerHTML = elem.title;
+                source.innerHTML = elem.source;
+                time.innerHTML = elem.time;
+                textDescriptionNode.innerHTML = elem.description;
+                description.insertBefore(textDescriptionNode, description.firstChild);
+                temperature.innerHTML = elem.data && elem.data.temperature ?
+                    'Температура: ' + (elem.data.temperature + ' C').bold() :
+                    '';
+                humidity.innerHTML = elem.data && elem.data.temperature ? '' +
+                    'Влажность: ' + (elem.data.humidity + '%').bold() :
+                    '';
+                image.src = elem.data && elem.data.image ?
+                    elem.data.image :
+                    (elem.data && elem.data.type ? 'icons/Richdata.png' : '');
 
-        if (elem.data && elem.data.image) {
-            image.style.visibility = 'hidden';
-            top.style.background = `url(${elem.data.image})`;
+                if (elem.data && elem.data.image) {
+                    image.style.visibility = 'hidden';
+                    top.style.background = `url(${elem.data.image})`;
 
-            addTouchInfoControls(description);
-        } else {
-            top.remove();
-        }
+                    addTouchInfoControls(description);
+                } else {
+                    top.remove();
+                }
 
-        elem.type === 'critical' ? cardCross.src = 'icons/cross-white.svg' : undefined;
+                elem.type === 'critical' ? cardCross.src = 'icons/cross-white.svg' : undefined;
 
-        checkOnTextOverflow(title, elem);
+                checkOnTextOverflow(title, elem);
 
-        if (elem.data && elem.data.buttons) {
-            elem.data.buttons.map(function(text) {
-                let button = document.createElement('button');
+                if (elem.data && elem.data.buttons) {
+                    elem.data.buttons.map(function(text) {
+                        let button = document.createElement('button');
 
-                button.classList = 'button' + (text === 'Да' ? ' button_type_yes' : '');
-                button.innerText = text;
-                description.appendChild(button);
-            })
-        }
+                        button.classList = 'button' + (text === 'Да' ? ' button_type_yes' : '');
+                        button.innerText = text;
+                        description.appendChild(button);
+                    })
+                }
 
-        if (!elem.data) {
-            template.content.querySelector('.card__additions').remove();
-        }
+                if (!elem.data) {
+                    template.content.querySelector('.card__additions').remove();
+                }
 
-        if (elem.data && elem.data.albumcover) {
-            let playerTemplate = document.importNode(pl, true),
-                albumIcon = playerTemplate.content.querySelector(".player__icon"),
-                trackName = playerTemplate.content.querySelector(".song__name"),
-                trackLength = playerTemplate.content.querySelector(".control__slider"),
-                volume = playerTemplate.content.querySelector(".controls__slider"),
-                volumeValue = playerTemplate.content.querySelector(".controls__volume"),
-                timeValue = playerTemplate.content.querySelector(".control__time");
+                if (elem.data && elem.data.albumcover) {
+                    let playerTemplate = document.importNode(pl, true),
+                        albumIcon = playerTemplate.content.querySelector(".player__icon"),
+                        trackName = playerTemplate.content.querySelector(".song__name"),
+                        trackLength = playerTemplate.content.querySelector(".control__slider"),
+                        volume = playerTemplate.content.querySelector(".controls__slider"),
+                        volumeValue = playerTemplate.content.querySelector(".controls__volume"),
+                        timeValue = playerTemplate.content.querySelector(".control__time");
 
-            albumIcon.src = elem.data.albumcover;
-            trackName.innerText = elem.data.artist + ' - ' + elem.data.track.name;
-            trackLength.innerText = elem.data.track.length;
-            trackLength.max = elem.data.track.length;
-            volume.value = elem.data.volume;
-            volumeValue.innerText = elem.data.volume + '%';
-            timeValue.innerText = elem.data.track.length;
+                    albumIcon.src = elem.data.albumcover;
+                    trackName.innerText = elem.data.artist + ' - ' + elem.data.track.name;
+                    trackLength.innerText = elem.data.track.length;
+                    trackLength.max = elem.data.track.length;
+                    volume.value = elem.data.volume;
+                    volumeValue.innerText = elem.data.volume + '%';
+                    timeValue.innerText = elem.data.track.length;
 
-            volume.oninput = function() {
-                volumeValue.innerText = volume.value + '%';
-            };
+                    volume.oninput = function() {
+                        volumeValue.innerText = volume.value + '%';
+                    };
 
-            card.appendChild(playerTemplate.content);
-        }
+                    card.appendChild(playerTemplate.content);
+                }
 
-        elem.description ? undefined : description.remove();
-        elem.data && (elem.data.image || elem.data.type === 'graph') ? undefined : image.remove();
+                elem.description ? undefined : description.remove();
+                elem.data && (elem.data.image || elem.data.type === 'graph') ? undefined : image.remove();
 
-        feed.appendChild(template.content)
-    })
+                feed.appendChild(template.content)
+            });
+
+            loadGesturesScript(); // ждем ответа от сервера с events
+        });
 }
 
+/**
+ * Подключаем скрипт обработки жестов
+ */
+function loadGesturesScript() {
+    let script = document.createElement('script');
+
+    script.src = "js/gestures.js";
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
 
 /**
  * Проверяем длину строки, не более 2х строк.
