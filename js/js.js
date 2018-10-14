@@ -334,28 +334,36 @@ function addTouchInfoControls(target) {
 }
 
 function initTabToggleListner() {
-    let tabVideo = document.querySelector('.tab_video'),
-        tabEvents = document.querySelector('.tab_events'),
-        video = document.getElementById('video'),
-        events = document.getElementById('events');
+    let tabVideo = Array.from(document.getElementsByClassName('tab_video')),
+        tabEvents = Array.from(document.getElementsByClassName('tab_events')),
+        video = document.querySelector('.video-container'),
+        events = document.querySelector('.events');
 
-    tabEvents.onclick = function() {
-        if (!events.classList.contains('selected')) {
-            tabVideo.classList.toggle('selected');
-            video.classList.toggle('hidden');
-            tabEvents.classList.toggle('selected');
-            events.classList.toggle('hidden');
-        }
-    };
+    tabEvents.forEach((elem) => {
+        elem.onclick = function() {
+            if (events.classList.contains('hidden')) {
+                tabEvents.forEach((elem) => {
+                    elem.classList.toggle('selected');
+                });
+                video.classList.toggle('hidden');
+                elem.classList.toggle('selected');
+                events.classList.toggle('hidden');
+            }
+        };
+    });
 
-    tabVideo.onclick = function() {
-        if (!video.classList.contains('selected')) {
-            tabVideo.classList.toggle('selected');
-            video.classList.toggle('hidden');
-            tabEvents.classList.toggle('selected');
-            events.classList.toggle('hidden');
+    tabVideo.forEach((elem) => {
+        elem.onclick = function() {
+            if (video.classList.contains('hidden')) {
+                tabVideo.forEach((elem) => {
+                    elem.classList.toggle('selected');
+                });
+                video.classList.toggle('hidden');
+                elem.classList.toggle('selected');
+                events.classList.toggle('hidden');
+            }
         }
-    }
+    });
 }
 
 (function(){

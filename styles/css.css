@@ -18,7 +18,7 @@ header
 
 .hidden
 {
-    display: none;
+    display: none !important;
 }
 
 .card__next
@@ -89,7 +89,7 @@ header
     padding: 25px;
     position: absolute;
     right: 45px;
-    top: -300px;
+    top: -330px;
     z-index: 1;
 }
 

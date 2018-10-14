@@ -1,3 +1,8 @@
+/**
+ * Инициализируем потоковые видео
+ * @param video
+ * @param url
+ */
 function initVideo(video, url) {
     if (Hls.isSupported()) {
         var hls = new Hls({
@@ -33,12 +38,11 @@ function initVideo(video, url) {
             video.play();
         });
     }
-
-    // video.onclick = function() {
-    //     video.classList.add('fscreen');
-    // };
 }
 
+/**
+ * Инициализируем контролы для видео плеера
+ */
 function initPlayerControls() {
     var videoNodes = Array.from(document.getElementsByClassName('video'));
 
@@ -50,6 +54,7 @@ function initPlayerControls() {
             brightnessValue = brigthness.value / 10,
             contrastValue = contrast.value / 10,
             backButton = video.parentNode.querySelector('.player__button'),
+            controlsPanel = video.parentNode.querySelector('.player__panel'),
             analyzer = new audioAnalyzer();
 
         brigthness.oninput = function() {
@@ -63,16 +68,15 @@ function initPlayerControls() {
         };
 
         video.onclick = function() {
-
-            //videoClick(video);
             video.parentNode.classList.add('video-opened');
+            controlsPanel.classList.remove('hidden');
             video.muted = false;
             analyzer.connectVideo(video);
-            console.log('muted must be false!');
         };
 
         backButton.onclick = function() {
             video.parentNode.classList.remove('video-opened');
+            controlsPanel.classList.add('hidden');
             video.muted = true;
         };
 
@@ -82,27 +86,10 @@ function initPlayerControls() {
     });
 }
 
-function videoClick(video) {
-    var videoContainer = video.parentNode,
-        width = videoContainer.offsetWidth,
-        height = videoContainer.offsetHeight,
-        videoPosX = videoContainer.getBoundingClientRect().x,
-        videoPosY = videoContainer.getBoundingClientRect().y,
-        viewWidth = document.body.clientWidth,
-        viewHeight = document.body.clientHeight,
-        ratioX, ratioY, locX, locY;
-
-
-    ratioX = viewWidth / width;
-    ratioY = viewHeight / height;
-    locX = Math.sqrt( Math.pow((viewWidth / 4) - videoPosX, 2));
-    locY = Math.sqrt(Math.pow(videoPosY - (viewHeight / 4), 2));
-    console.log(videoPosX,locX);
-
-    videoContainer.style.transform = `scale(${ratioX}, ${ratioY}) translate(${locX}px, ${locY}px)`;
-
-}
-
+/**
+ * Конструктор аудио анализатора
+ * @returns {audioAnalyzer}
+ */
 function audioAnalyzer() {
     this.context = this.context || new (window.AudioContext || window.webkitAudioContext)();
     this.node = this.node || this.context.createScriptProcessor(2048, 1, 1);
@@ -114,10 +101,7 @@ function audioAnalyzer() {
     this.bands = new Uint8Array(this.analyser.frequencyBinCount);
 
     this.connectVideo = function(video) {
-        console.log(this.context)
         this.source = this.context.createMediaElementSource(video);
-        console.log(this.context)
-        console.log(this.source)
 
             this.source.connect(this.analyser);
             this.analyser.connect(this.node);
@@ -138,6 +122,12 @@ function audioAnalyzer() {
     return this;
 }
 
+/**
+ * Отрисовываем диаграмму анализатора
+ * @param bands
+ * @param canvas
+ * @param ctx
+ */
 function draw(bands, canvas, ctx) {
     //window.webkitRequestAnimationFrame(draw);
 
@@ -146,7 +136,7 @@ function draw(bands, canvas, ctx) {
         rectWidth,rectHeight;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // '#00CCFF';
+
     for (let i = 0; i < bars; i++) {
         rectX = i * 3;
         rectWidth = 2;
@@ -159,16 +149,15 @@ function draw(bands, canvas, ctx) {
 
 (function() {
     initPlayerControls();
-    //var a = new audioAnalyzer(document.getElementById('video-2'));
 
     initVideo(
         document.getElementById('video-1'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A8000%2Fstreams%2Fsosed%2Fmaster.m3u8'
+        'http://192.168.1.54:9191/master?url=http%3A%2F%2F192.168.1.54%3A8000%2Fstreams%2Fsosed%2Fmaster.m3u8'
     );
 
     initVideo(
         document.getElementById('video-2'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A8000%2Fstreams%2Fcat%2Fmaster.m3u8'
+        'http://192.168.1.54:9191/master?url=http%3A%2F%2F192.168.1.54%3A8000%2Fstreams%2Fcat%2Fmaster.m3u8'
     );
 
     initVideo(

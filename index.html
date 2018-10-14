@@ -40,7 +40,7 @@
         </header>
             <ul class="mobile-menu">
                 <li class='mobile-menu__tab'>
-                    <a class='link' href='#'>События</a>
+                    <a class='link selected tab_events' href='#'>События</a>
                 </li>
                 <li class='mobile-menu__tab'>
                     <a class='link' href='#'>Сводка</a>
@@ -51,9 +51,12 @@
                 <li class='mobile-menu__tab'>
                     <a class='link' href='#'>Сценарии</a>
                 </li>
+                <li class='mobile-menu__tab'>
+                    <a class='link tab_video' href='#'>Видеонаблюдение</a>
+                </li>
             </ul>
         <main>
-            <div id='events'>
+            <div class='events'>
                 <div class='header'>Лента Событий</div>
                 <div class='feed'>
                     <template id="tmpl">
@@ -99,51 +102,57 @@
                     </template>
                 </div>
             </div>
-            <div id="video" class="hidden">
-                <div class="video-container">
-                    <div class="video__player">
-                        <video id="video-1" class="video" preload="auto" muted autoplay></video>
+            <div class="video-container hidden">
+                <div class="video__player">
+                    <video id="video-1" class="video"  muted autoplay></video>
+                    <div class="player__panel hidden">
                         <canvas class="canvas" width="350" height="50"></canvas>
-                        <div class="player__panel">
-                            Контраст:
+                        <div class="player__settings">
+                            <p>Контраст:</p>
                             <input type="range" min='1' max='100' value='10' class="input__contrast">
-                            Яркость:
+                            <p>Яркость:</p>
                             <input type="range" min='1' max='100' value='10' class="input__brightness">
-                            <button class="player__button">Все видео</button>
                         </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
                     </div>
-                    <div class="video__player">
-                        <video id="video-2" class="video" preload="auto" muted autoplay></video>
+                </div>
+                <div class="video__player">
+                    <video id="video-2" class="video"  muted autoplay></video>
+                    <div class="player__panel hidden">
                         <canvas class="canvas" width="350" height="50"></canvas>
-                        <div class="player__panel">
-                            Контраст:
+                        <div class="player__settings">
+                            <p>Контраст:</p>
                             <input type="range" min='1' max='100' value='10' class="input__contrast">
-                            Яркость:
+                            <p>Яркость:</p>
                             <input type="range" min='1' max='100' value='10' class="input__brightness">
-                            <button class="player__button">Все видео</button>
                         </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
                     </div>
-                    <div class="video__player">
-                        <video id="video-3" class="video" preload="auto" muted autoplay></video>
+                </div>
+                <div class="video__player">
+                    <video id="video-3" class="video"  muted autoplay></video>
+                    <div class="player__panel hidden">
                         <canvas class="canvas" width="350" height="50"></canvas>
-                        <div class="player__panel">
-                            Контраст:
+                        <div class="player__settings">
+                            <p>Контраст:</p>
                             <input type="range" min='1' max='100' value='10' class="input__contrast">
-                            Яркость:
+                            <p>>Яркость:</p>
                             <input type="range" min='1' max='100' value='10' class="input__brightness">
-                            <button class="player__button">Все видео</button>
                         </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
                     </div>
-                    <div class="video__player">
-                        <video id="video-4" class="video" preload="auto" controls muted autoplay></video>
+                </div>
+                <div class="video__player">
+                    <video id="video-4" class="video" muted autoplay></video>
+                    <div class="player__panel hidden">
                         <canvas class="canvas" width="350" height="50"></canvas>
-                        <div class="player__panel">
-                            Контраст:
+                        <div class="player__settings">
+                            <p>Контраст:</p>
                             <input type="range" min='1' max='100' value='10' class="input__contrast">
-                            Яркость:
+                            <p>Яркость:</p>
                             <input type="range" min='1' max='100' value='10' class="input__brightness">
-                            <button class="player__button">Все видео</button>
                         </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
                     </div>
                 </div>
             </div>
