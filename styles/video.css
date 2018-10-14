@@ -90,15 +90,11 @@
 
     .input__contrast
     {
-        /*transform: rotate(90deg);*/
-        /*margin-bottom: 100px;*/
         width: 70px;
     }
 
     .input__brightness
     {
-        /*transform: rotate(90deg);*/
-        /*margin-bottom: 100px;*/
         width: 70px;
     }
 
@@ -109,7 +105,7 @@
         z-index: 14;
         width: 160px;
         position: absolute;
-        right: 0px;
+        right: 0;
         bottom: 30px;
         background-color: rgba(0,0,0,0.4);
         border-radius: 8px;
