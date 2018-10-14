@@ -11,11 +11,12 @@
 .video__player
 {
     position: relative;
-    transition: all 1.15s linear;
-    -webkit-transition: all 1.15s linear;
+    transition: all .15s linear;
+    -webkit-transition: all .15s linear;
     background-color: black;
     border-radius: 10px;
     will-change: width,height;
+    height: 40vh;
 }
 
 
@@ -80,6 +81,11 @@
         grid-template-columns: minmax(280px,800px);
         grid-template-rows: auto;
     }
+
+    .video__player
+    {
+        height: 100%;
+    }
 }
 
 @media(max-width: 550px) {
@@ -119,8 +125,5 @@
 }
 
 @media(max-width: 420px) {
-    .canvas
-    {
-        bottom: 75px;
-    }
+
 }
