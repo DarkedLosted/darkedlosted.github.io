@@ -574,6 +574,42 @@ main
     {
         font-size: 9px;
     }
+
+    .tabs-menu
+    {
+        line-height: 0;
+        padding: 0;
+    }
+
+    header
+    {
+        border: none;
+        height: 20px;
+    }
+
+    .logo
+    {
+        vertical-align: bottom;
+        padding: 0;
+        margin: 22px auto auto 20px;
+    }
+
+    .header
+    {
+        margin: 36px auto 18px;
+    }
+
+    .mobile-menu-icon
+    {
+        display: block;
+        float: right;
+        margin: 27px 14px auto auto;
+    }
+
+    .tabs-menu__tab
+    {
+        display: none;
+    }
 }
 
 @media(max-width: 645px)
@@ -618,42 +654,13 @@ main
         grid-column: span 2;
     }
 
-    .mobile-menu-icon
-    {
-        display: block;
-        float: right;
-        margin: 27px 14px auto auto;
-    }
-
-    .tabs-menu__tab
-    {
-        display: none;
-    }
-
     .button
     {
         margin-right: 16px;
         padding: 15px 40px;
     }
 
-    .tabs-menu
-    {
-        line-height: 0;
-        padding: 0;
-    }
 
-    header
-    {
-        border: none;
-        height: 20px;
-    }
-
-    .logo
-    {
-        vertical-align: bottom;
-        padding: 0;
-        margin: 22px auto auto 20px;
-    }
 
     .feed {
         grid-template-columns: minmax(280px, 1fr);
@@ -690,11 +697,6 @@ main
     .card__time
     {
         text-align: right !important;
-    }
-
-    .header
-    {
-        margin: 36px auto 18px;
     }
 
     .footer__tab_side_right

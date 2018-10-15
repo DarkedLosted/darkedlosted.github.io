@@ -7,17 +7,18 @@ function initVideo(video, url) {
     if (Hls.isSupported()) {
         var hls = new Hls({
             liveDurationInfinity: true,
-            autoStartLoad: true
+            autoStartLoad: true,
+            defaultAudioCodec: 'mp4a.40.5'
         });
         hls.loadSource(url);
         hls.attachMedia(video);
         hls.firstLevel = 1;
         hls.loadLevel = -1;
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
             video.play();
         });
 
-        hls.on(Hls.Events.ERROR, function (event, data) {
+        hls.on(Hls.Events.ERROR, (event, data) => {
            if (data.fatal) {
              switch(data.type) {
              case Hls.ErrorTypes.NETWORK_ERROR:
@@ -34,7 +35,7 @@ function initVideo(video, url) {
 
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8';
-        video.addEventListener('loadedmetadata', function () {
+        video.addEventListener('loadedmetadata', () => {
             video.play();
         });
     }
@@ -44,43 +45,49 @@ function initVideo(video, url) {
  * Инициализируем контролы для видео плеера
  */
 function initPlayerControls() {
-    var videoNodes = Array.from(document.getElementsByClassName('video'));
+    let videoNodes = Array.from(document.getElementsByClassName('video'));
 
     console.log(videoNodes);
 
-    videoNodes.forEach(function(video) {
+    videoNodes.forEach((video) => {
         let brigthness = video.parentNode.querySelector('.input__brightness'),
             contrast = video.parentNode.querySelector('.input__contrast'),
             brightnessValue = brigthness.value / 10,
             contrastValue = contrast.value / 10,
             backButton = video.parentNode.querySelector('.player__button'),
             controlsPanel = video.parentNode.querySelector('.player__panel'),
+            settings = video.parentNode.querySelector('.player__settings'),
+            settingsButton = video.parentNode.querySelector('.settings_icon'),
             analyzer = new audioAnalyzer();
 
-        brigthness.oninput = function() {
+        brigthness.addEventListener('input', () => {
             brightnessValue = brigthness.value / 10;
             video.style.filter = `contrast(${ contrastValue }) brightness(${ brightnessValue })`;
-        };
+        });
 
-        contrast.oninput = function() {
+        contrast.addEventListener('input', () => {
             contrastValue = contrast.value / 10;
             video.style.filter = `contrast(${ contrastValue }) brightness(${ brightnessValue })`;
-        };
+        });
 
-        video.onclick = function() {
+        video.addEventListener('click', () => {
             video.parentNode.classList.add('video-opened');
             controlsPanel.classList.remove('hidden');
             video.muted = false;
             analyzer.connectVideo(video);
-        };
+        });
 
-        backButton.onclick = function() {
+        backButton.addEventListener('click', () => {
             video.parentNode.classList.remove('video-opened');
             controlsPanel.classList.add('hidden');
             video.muted = true;
-        };
+        });
 
-        video.addEventListener('pause canplay', function() {
+        settingsButton.addEventListener('click', () => {
+            settings.classList.toggle('hidden');
+        });
+
+        video.addEventListener('pause canplay', () => {
             video.play();
         });
     });
@@ -99,9 +106,13 @@ function audioAnalyzer() {
     this.analyser.smoothingTimeConstant = 0.3;
     this.analyser.fftSize = 512;
     this.bands = new Uint8Array(this.analyser.frequencyBinCount);
+    this.mediaElements = [];
 
-    this.connectVideo = function(video) {
-        this.source = this.context.createMediaElementSource(video);
+    this.connectVideo = (video) => {
+        if (!this.mediaElements.includes(video)) {
+            this.source = this.context.createMediaElementSource(video);
+            this.mediaElements.push(video);
+        }
 
             this.source.connect(this.analyser);
             this.analyser.connect(this.node);
@@ -111,12 +122,12 @@ function audioAnalyzer() {
                 var canvas = video.parentNode.querySelector('.canvas'),
                     ctx = canvas.getContext('2d');
 
-        this.node.addEventListener('audioprocess', function () {
+        this.node.addEventListener('audioprocess', () => {
             this.analyser.getByteFrequencyData(this.bands);
 
             setInterval(draw(this.bands, canvas, ctx), 150);
 
-        }.bind(this));
+        });
     };
 
     return this;

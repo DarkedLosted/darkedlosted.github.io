@@ -166,19 +166,7 @@ var data = {
  */
 function init() {
     var feed = document.querySelector('.feed'),
-        icons = {
-            cam: 'icons/cam.svg',
-            kettle: 'icons/kettle.svg',
-            battery: 'icons/battery.svg',
-            fridge: 'icons/fridge.svg',
-            music: 'icons/music.svg',
-            ac: 'icons/ac.svg',
-            thermal: 'icons/thermal.svg',
-            router: 'icons/router.svg',
-            key: 'icons/key.svg',
-            'robot-cleaner': 'icons/robot-cleaner.svg',
-            stats: 'icons/stats.svg',
-        };
+        icons = u.getIcons();
 
     data.events.map(function(elem) {
         var template = document.importNode(tmpl, true),
@@ -340,7 +328,7 @@ function initTabToggleListner() {
         events = document.querySelector('.events');
 
     tabEvents.forEach((elem) => {
-        elem.onclick = function() {
+        elem.addEventListener('click', () => {
             if (events.classList.contains('hidden')) {
                 tabEvents.forEach((elem) => {
                     elem.classList.toggle('selected');
@@ -349,11 +337,11 @@ function initTabToggleListner() {
                 elem.classList.toggle('selected');
                 events.classList.toggle('hidden');
             }
-        };
+        });
     });
 
     tabVideo.forEach((elem) => {
-        elem.onclick = function() {
+        elem.addEventListener('click', () => {
             if (video.classList.contains('hidden')) {
                 tabVideo.forEach((elem) => {
                     elem.classList.toggle('selected');
@@ -362,7 +350,7 @@ function initTabToggleListner() {
                 elem.classList.toggle('selected');
                 events.classList.toggle('hidden');
             }
-        }
+        })
     });
 }
 

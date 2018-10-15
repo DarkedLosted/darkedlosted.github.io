@@ -33,9 +33,10 @@
 .video-opened
 {
     position: absolute !important;
+    border-radius: 0;
     z-index: 12;
-    width: 100%;
     height: 100%;
+    width: 100%;
     top: 0;
     left: 0;
 }
@@ -66,13 +67,30 @@
     border: none;
     text-decoration: none;
     outline: none;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .player__settings
 {
     display: flex;
     justify-content: space-evenly;
+    width: 35%;
+}
+
+.settings_icon
+{
+    display: none;
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+}
+
+.settings_icon:active
+{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
 }
 
 @media(max-width: 980px) {
@@ -122,8 +140,9 @@
     {
         margin: 5px;
     }
-}
 
-@media(max-width: 420px) {
-
+    .settings_icon
+    {
+        display: block;
+    }
 }
