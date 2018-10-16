@@ -75,12 +75,14 @@ function initPlayerControls() {
             controlsPanel.classList.remove('hidden');
             video.muted = false;
             analyzer.connectVideo(video);
+            analyzer.play();
         });
 
         backButton.addEventListener('click', () => {
             video.parentNode.classList.remove('video-opened');
             controlsPanel.classList.add('hidden');
             video.muted = true;
+            analyzer.pause();
         });
 
         settingsButton.addEventListener('click', () => {
@@ -107,6 +109,7 @@ function audioAnalyzer() {
     this.analyser.fftSize = 512;
     this.bands = new Uint8Array(this.analyser.frequencyBinCount);
     this.mediaElements = [];
+    this.paint = true;
 
     this.connectVideo = (video) => {
         if (!this.mediaElements.includes(video)) {
@@ -125,9 +128,16 @@ function audioAnalyzer() {
         this.node.addEventListener('audioprocess', () => {
             this.analyser.getByteFrequencyData(this.bands);
 
-            setInterval(draw(this.bands, canvas, ctx), 150);
-
+            this.paint && draw(this.bands, canvas, ctx, this.paint);
         });
+    };
+
+    this.play = () => {
+        this.paint = true;
+    };
+
+    this.pause = () => {
+        this.paint = false;
     };
 
     return this;
@@ -140,7 +150,6 @@ function audioAnalyzer() {
  * @param ctx
  */
 function draw(bands, canvas, ctx) {
-    //window.webkitRequestAnimationFrame(draw);
 
     var bars = 256,
         rectX,
@@ -156,6 +165,8 @@ function draw(bands, canvas, ctx) {
         ctx.fillStyle = `rgb( ${ rectHeight + 170 }, 204, 255)`;
         ctx.fillRect(rectX, canvas.height - rectHeight / 2, rectWidth, rectHeight);
     }
+
+    window.webkitRequestAnimationFrame(draw);
 }
 
 (function() {
@@ -170,6 +181,12 @@ function draw(bands, canvas, ctx) {
         videoNodes = Array.from(document.getElementsByClassName('video'));
 
     videoNodes.forEach((video, i) => {
+        let videoLightValue = video.parentNode.querySelector('.video__light-value');
+
+        setTimeout(() => {
+            videoLightValue.innerHTML = `LightValue: ${u.getLightValue(video)}`;
+        }, 1000);
+
         initVideo(video, videoUrls[i])
     });
 })();
