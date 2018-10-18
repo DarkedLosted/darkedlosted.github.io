@@ -75,16 +75,16 @@
                 current = 0,
                 pixelPos = new u.Pointer(0, 0),
                 minPos = new u.Pointer(this.width, this.height),
-                maxPos = new u.Pointer(0, 0);
+                maxPos = new u.Pointer(0, 0),
+                lightnessChanged;
 
             this.ctx.clearRect(0,0,this.width,this.height);
 
             for (let i = 0, j = 0; i < buffer.length; i++, j += 4) {
-                current = u.lightnessValue(data[j], data[j + 1], data[j + 2]);
+                buffer[i] = u.lightnessValue(data[j], data[j + 1], data[j + 2]);
+                lightnessChanged = this.lightnessHasChanged(i, buffer[i]);
 
-                data[j + 3] = 255 * this.lightnessHasChanged(i, current);
-
-                if (this.lightnessHasChanged(i, current)) {
+                if (lightnessChanged) {
                     pixelPos.x = j / 4 % this.width;
                     pixelPos.y = Math.floor((j / 4 - pixelPos.x) / this.width);
 
@@ -101,8 +101,6 @@
                         maxPos.x = pixelPos.x;
                     }
                 }
-
-                buffer[i] = current;
             }
 
                 this.ctx.strokeStyle = `#1ed10a`;
