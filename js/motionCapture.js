@@ -4,6 +4,11 @@
         var buffId = 0,
             inited = false;
 
+        /**
+         * init Motion detector
+         * @param video
+         * @param append
+         */
         this.init = function initialize(video, append) {
             if (inited) {
                 return;
@@ -13,7 +18,7 @@
             this.buffers = [];
             this.width = video.getBoundingClientRect().width;
             this.height = video.getBoundingClientRect().height;
-            
+
             this.canvas.width = this.width;
             this.canvas.height = this.height;
             this.canvas.classList.add('motion_canvas');
@@ -33,7 +38,11 @@
             this.draw();
         };
 
-        this.getFrame = function readFrame() {
+        /**
+         * get frame from video stream
+         * @returns {*}
+         */
+        this.getFrame = function getFrame() {
             try {
                 this.ctx.drawImage(this.video, 0, 0, this.width, this.height);
             } catch (e) {
@@ -43,6 +52,10 @@
             return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
         };
 
+        /**
+         * draw rectangle on motion detected
+         * @type {any}
+         */
         this.draw = function draw() {
             let frame = this.getFrame();
 
@@ -50,9 +63,13 @@
                 this.markLightnessChanges(frame.data);
             }
 
-            requestAnimationFrame(this.draw)
+            requestAnimationFrame(this.draw);
         }.bind(this);
 
+        /**
+         * define position of detected motion
+         * @param data
+         */
         this.markLightnessChanges = function markLightnessChanges(data) {
             let buffer = this.buffers[buffId++ % this.buffers.length],
                 current = 0,
@@ -89,19 +106,26 @@
             }
 
                 this.ctx.strokeStyle = `#1ed10a`;
-                this.ctx.strokeRect(minPos.x, minPos.y, Math.abs(maxPos.x  - minPos.x), Math.abs(maxPos.y - minPos.y));
+                this.ctx.strokeRect(minPos.x, minPos.y, Math.abs(maxPos.x - minPos.x), Math.abs(maxPos.y - minPos.y));
         };
 
+        /**
+         * determine difference lightness value of every pixel on threshold
+         * @param index
+         * @param value
+         * @returns {boolean}
+         */
         this.lightnessHasChanged = function lightnessHasChanged(index, value) {
-            return this.buffers.some(function(buffer) {
-                return Math.abs(value - buffer[index]) >= 15;
-            });
+            return this.buffers.some((buffer) => Math.abs(value - buffer[index]) >= 15);
         };
 
+        /**
+         * remove canvas
+         */
         this.remove = function() {
             inited = false;
             this.canvas.remove();
-        }
+        };
     }
 
     window.motionCapture = motionCapture;

@@ -165,11 +165,11 @@ var data = {
  * Шаблонизируем данные из JSON
  */
 function init() {
-    var feed = document.querySelector('.feed'),
+    let feed = document.querySelector('.feed'),
         icons = u.getIcons();
 
-    data.events.map(function(elem) {
-        var template = document.importNode(tmpl, true),
+    data.events.map((elem) => {
+        let template = document.importNode(tmpl, true),
             card = template.content.querySelector(".card"),
             icon = template.content.querySelector(".card__icon"),
             title = template.content.querySelector(".card__title"),
@@ -192,15 +192,15 @@ function init() {
         time.innerHTML = elem.time;
         textDescriptionNode.innerHTML = elem.description;
         description.insertBefore(textDescriptionNode, description.firstChild);
-        temperature.innerHTML = elem.data && elem.data.temperature ?
-            'Температура: ' + (elem.data.temperature + ' C').bold() :
-            '';
-        humidity.innerHTML = elem.data && elem.data.temperature ? '' +
-            'Влажность: ' + (elem.data.humidity + '%').bold() :
-            '';
-        image.src = elem.data && elem.data.image ?
-            elem.data.image :
-            (elem.data && elem.data.type ? 'icons/Richdata.png' : '');
+        temperature.innerHTML = elem.data && elem.data.temperature
+            ? `Температура: ${ (`${elem.data.temperature } C`).bold()}`
+            : '';
+        humidity.innerHTML = elem.data && elem.data.temperature ? `${'' +
+            'Влажность: '}${ (`${elem.data.humidity }%`).bold()}`
+            : '';
+        image.src = elem.data && elem.data.image
+            ? elem.data.image
+            : (elem.data && elem.data.type ? 'icons/Richdata.png' : '');
 
         if (elem.data && elem.data.image) {
             image.style.visibility = 'hidden';
@@ -216,13 +216,13 @@ function init() {
         checkOnTextOverflow(title, elem);
 
         if (elem.data && elem.data.buttons) {
-            elem.data.buttons.map(function(text) {
+            elem.data.buttons.map((text) => {
                 let button = document.createElement('button');
 
-                button.classList = 'button' + (text === 'Да' ? ' button_type_yes' : '');
+                button.classList = `button${ text === 'Да' ? ' button_type_yes' : ''}`;
                 button.innerText = text;
                 description.appendChild(button);
-            })
+            });
         }
 
         if (!elem.data) {
@@ -239,15 +239,15 @@ function init() {
                 timeValue = playerTemplate.content.querySelector(".control__time");
 
             albumIcon.src = elem.data.albumcover;
-            trackName.innerText = elem.data.artist + ' - ' + elem.data.track.name;
+            trackName.innerText = `${elem.data.artist } - ${ elem.data.track.name}`;
             trackLength.innerText = elem.data.track.length;
             trackLength.max = elem.data.track.length;
             volume.value = elem.data.volume;
-            volumeValue.innerText = elem.data.volume + '%';
+            volumeValue.innerText = `${elem.data.volume }%`;
             timeValue.innerText = elem.data.track.length;
 
             volume.oninput = function() {
-                volumeValue.innerText = volume.value + '%';
+                volumeValue.innerText = `${volume.value }%`;
             };
 
             card.appendChild(playerTemplate.content);
@@ -256,8 +256,8 @@ function init() {
         elem.description ? undefined : description.remove();
         elem.data && (elem.data.image || elem.data.type === 'graph') ? undefined : image.remove();
 
-        feed.appendChild(template.content)
-    })
+        feed.appendChild(template.content);
+    });
 }
 
 
@@ -271,7 +271,7 @@ function checkOnTextOverflow(elem) {
         result = text;
 
     if (result.length > maxLength) {
-        result = result.substr(0, maxLength) + "...";
+        result = `${result.substr(0, maxLength) }...`;
     }
 
     elem.innerHTML = result;
@@ -350,11 +350,11 @@ function initTabToggleListner() {
                 elem.classList.toggle('selected');
                 events.classList.toggle('hidden');
             }
-        })
+        });
     });
 }
 
-(function(){
+(function() {
     init();
     initTabToggleListner();
 })();
