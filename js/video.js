@@ -47,8 +47,6 @@ function initVideo(video, url) {
 function initPlayerControls() {
     let videoNodes = Array.from(document.getElementsByClassName('video'));
 
-    console.log(videoNodes);
-
     videoNodes.forEach((video) => {
         let brigthness = video.parentNode.querySelector('.input__brightness'),
             contrast = video.parentNode.querySelector('.input__contrast'),
@@ -58,7 +56,8 @@ function initPlayerControls() {
             controlsPanel = video.parentNode.querySelector('.player__panel'),
             settings = video.parentNode.querySelector('.player__settings'),
             settingsButton = video.parentNode.querySelector('.settings_icon'),
-            analyzer = new audioAnalyzer();
+            analyzer = new audioAnalyzer(),
+            motionDetection = new motionCapture();
 
         brigthness.addEventListener('input', () => {
             brightnessValue = brigthness.value / 10;
@@ -76,6 +75,9 @@ function initPlayerControls() {
             video.muted = false;
             analyzer.connectVideo(video);
             analyzer.play();
+            setTimeout(() => {
+                motionDetection.init(video, video.parentNode);
+            }, 1000);
         });
 
         backButton.addEventListener('click', () => {
@@ -83,6 +85,7 @@ function initPlayerControls() {
             controlsPanel.classList.add('hidden');
             video.muted = true;
             analyzer.pause();
+            motionDetection.remove();
         });
 
         settingsButton.addEventListener('click', () => {
@@ -117,18 +120,18 @@ function audioAnalyzer() {
             this.mediaElements.push(video);
         }
 
-            this.source.connect(this.analyser);
-            this.analyser.connect(this.node);
-            this.node.connect(this.context.destination);
-            this.source.connect(this.context.destination);
+        this.source.connect(this.analyser);
+        this.analyser.connect(this.node);
+        this.node.connect(this.context.destination);
+        this.source.connect(this.context.destination);
 
-                var canvas = video.parentNode.querySelector('.canvas'),
-                    ctx = canvas.getContext('2d');
+        let canvas = video.parentNode.querySelector('.canvas'),
+            ctx = canvas.getContext('2d');
 
         this.node.addEventListener('audioprocess', () => {
             this.analyser.getByteFrequencyData(this.bands);
 
-            this.paint && draw(this.bands, canvas, ctx, this.paint);
+            this.paint && draw(this.bands, canvas, ctx);
         });
     };
 
@@ -150,8 +153,7 @@ function audioAnalyzer() {
  * @param ctx
  */
 function draw(bands, canvas, ctx) {
-
-    var bars = 256,
+    let bars = 256,
         rectX,
         rectWidth,rectHeight;
 
@@ -165,8 +167,6 @@ function draw(bands, canvas, ctx) {
         ctx.fillStyle = `rgb( ${ rectHeight + 170 }, 204, 255)`;
         ctx.fillRect(rectX, canvas.height - rectHeight / 2, rectWidth, rectHeight);
     }
-
-    window.webkitRequestAnimationFrame(draw);
 }
 
 (function() {
@@ -185,8 +185,8 @@ function draw(bands, canvas, ctx) {
 
         setTimeout(() => {
             videoLightValue.innerHTML = `LightValue: ${u.getLightValue(video)}`;
-        }, 1000);
+        }, 1500);
 
-        initVideo(video, videoUrls[i])
+        initVideo(video, videoUrls[i]);
     });
 })();

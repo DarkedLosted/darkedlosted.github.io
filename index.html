@@ -10,6 +10,7 @@
         <script src="js/utils.js" defer></script>
         <script src="js/js.js" defer></script>
         <script src="js/gestures.js" defer></script>
+        <script src="js/motionCapture.js" defer></script>
         <script src="https://code.jquery.com/pep/0.4.3/pep.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" defer></script>
         <script src="js/video.js" defer></script>
@@ -60,13 +61,13 @@
                 <div class='header'>Лента Событий</div>
                 <div class='feed'>
                     <template id="tmpl">
-                        <div class="card">
-                            <img src="icons/cross.svg" alt="cross" class="card__cross" onclick="this.parentElement.remove()">
+                        <article class="card">
+                            <img src="icons/cross.svg" title="Закрыть" alt="cross" class="card__cross" onclick="this.parentElement.remove()">
                             <div class='card__header'>
                                 <img class='card__icon' src="" alt="">
                                 <div class="card__title"></div>
-                                <div class="card__source"></div>
-                                <div class="card__time"></div>
+                                <div class="card__source" title="Источник"></div>
+                                <time datetime="..." class="card__time"></time>
                             </div>
                             <div class="card__description">
                                 <div class="card__additions">
@@ -76,15 +77,15 @@
                                     <div class="additions__humidity"></div>
                                 </div>
                             </div>
-                            <img src="icons/next-black.svg" alt="next" class="card__next">
-                        </div>
+                            <img src="icons/next-black.svg" title="Перейти" alt="next" class="card__next">
+                        </article>
                     </template>
                     <template id="pl">
                         <div class="player">
                             <div class="player__header">
                                 <img class="player__icon" src="" alt="album">
                                 <div class="player__song">
-                                    <div class="song__name"></div>
+                                    <label class="song__name"></label>
                                     <div class="song__control">
                                         <input type="range" min="0" class="control__slider">
                                         <span class="control__time"></span>

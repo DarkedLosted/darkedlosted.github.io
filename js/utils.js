@@ -19,30 +19,26 @@
         }
     };
 
+    utils.Pointer = function Pointer(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
+    };
+
     utils.lightnessValue = function lightnessValue(r, g, b) {
         return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
     };
 
     utils.getLightValue = function getLightValue(video) {
         let canvas = document.createElement('canvas'),
-            width = video.videoWidth,
-            height = video.videoHeight,
-            ctx = canvas.getContext('2d'),
-            data, current, count = 0, light = 0;
+          ctx = canvas.getContext('2d');
 
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = 1;
+        canvas.height = 1;
 
-        ctx.drawImage(video, 0, 0, width, height);
-        data = ctx.getImageData(0, 0, width, height).data;
-        for (let i = 0, j = 0; i < (width * height); i++, j += 4) {
-            current = u.lightnessValue(data[j], data[j + 1], data[j + 2]);
+        ctx.drawImage(video, 0, 0, 1, 1);
+        let data = ctx.getImageData(0, 0, 1, 1).data;
 
-            light+= current;
-            count++
-        }
-
-        return (light / count).toFixed(1);
+        return ((data[0] + data[1] + data[2]) / 3).toFixed(1);
     };
 
     window.u = utils;
