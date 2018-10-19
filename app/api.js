@@ -10,43 +10,48 @@ module.exports = {
         return `${hours}:${minutes}:${seconds}`;
     },
 
-    _getTypes: () => {
-        let data = fs.readFileSync(__dirname.concat('/statuses.json'));
-
-        return JSON.parse(data).types;
+    _readFile: (path) => {
+        return new Promise((resolve, reject) => {
+            fs.readFile(path, 'utf8', (err, data) => {
+                data ? resolve(JSON.parse(data)) : reject(err);
+            });
+        })
     },
 
-    getEvents: (params, response) => {
-        let data = fs.readFileSync(__dirname.concat('/routing/api/events/events.json')),
+    getEvents: async (params, response) => {
+        let data = await module.exports._readFile(__dirname.concat('/routing/api/events/events.json')),
             result = [],
             types = params.types,
             limit = parseInt(params.limit),
             offset = parseInt(params.offset) || 1,
-            isSuccess = false;
+            isSuccess = false,
+            docTypes = await module.exports._readFile(__dirname.concat('/statuses.json'));
 
-            data = JSON.parse(data).events;
+        data = data.events;
 
-            if (types) {
-                types.forEach((type) => {
-                    if (module.exports._getTypes().includes(type)) {
-                        result = result.concat(data.filter((event) => event.type === type));
-                        isSuccess = true;
-                    }
-                });
-            } else if(limit || offset) {
-                let locLimit = limit ? offset - 1 + limit : data.length;
-
-                locLimit = locLimit > data.length ? data.length : locLimit;
-                offset = offset > data.length ? 0 : offset;
-
-                for(let i = offset - 1; i < locLimit; i++) {
-                    result.push(data[i]);
+        if (types) {
+            types.forEach((type) => {
+                if (docTypes.types.includes(type)) {
+                    result = result.concat(data.filter((event) => event.type === type));
+                    isSuccess = true;
+                } else {
+                    isSuccess = false;
                 }
+            });
+        } else if(limit || offset) {
+            let locLimit = limit ? offset - 1 + limit : data.length;
 
-                isSuccess = true;
-            } else {
-                response.send(JSON.stringify(data));
+            locLimit = locLimit > data.length ? data.length : locLimit;
+            offset = offset > data.length ? 0 : offset;
+
+            for(let i = offset - 1; i < locLimit; i++) {
+                result.push(data[i]);
             }
+
+            isSuccess = true;
+        } else {
+            response.send(JSON.stringify(data));
+        }
 
         isSuccess ? response.send(result) : response.status(400).send('incorrect type');
     }
