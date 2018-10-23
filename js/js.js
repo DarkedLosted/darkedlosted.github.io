@@ -168,21 +168,26 @@ function init() {
     let feed = document.querySelector('.feed'),
         icons = u.getIcons();
 
-    data.events.map((elem) => {
-        let template = document.importNode(tmpl, true),
-            card = template.content.querySelector(".card"),
-            icon = template.content.querySelector(".card__icon"),
-            title = template.content.querySelector(".card__title"),
-            source = template.content.querySelector(".card__source"),
-            time = template.content.querySelector(".card__time"),
-            description = template.content.querySelector(".card__description"),
-            textDescriptionNode = document.createElement('span'),
-            image = template.content.querySelector(".additions__image"),
-            temperature = template.content.querySelector(".additions__temperature"),
-            humidity = template.content.querySelector(".additions__humidity"),
-            cardCross = card.querySelector(".card__cross"),
-            top = template.content.querySelector('.additions__top'),
-            cardClassList = elem.type === 'critical' ? ' error card_size_' : ' card_size_';
+    fetch('http://localhost:8000/api/events')
+        .then(data => {
+            return data.json()
+        })
+        .then(res => {
+            res.map(function(elem) {
+                var template = document.importNode(tmpl, true),
+                    card = template.content.querySelector(".card"),
+                    icon = template.content.querySelector(".card__icon"),
+                    title = template.content.querySelector(".card__title"),
+                    source = template.content.querySelector(".card__source"),
+                    time = template.content.querySelector(".card__time"),
+                    description = template.content.querySelector(".card__description"),
+                    textDescriptionNode = document.createElement('span'),
+                    image = template.content.querySelector(".additions__image"),
+                    temperature = template.content.querySelector(".additions__temperature"),
+                    humidity = template.content.querySelector(".additions__humidity"),
+                    cardCross = card.querySelector(".card__cross"),
+                    top = template.content.querySelector('.additions__top'),
+                    cardClassList = elem.type === 'critical' ? ' error card_size_' : ' card_size_';
 
         card.classList += cardClassList + elem.size;
         icon.src = icons[elem.icon];
@@ -256,10 +261,22 @@ function init() {
         elem.description ? undefined : description.remove();
         elem.data && (elem.data.image || elem.data.type === 'graph') ? undefined : image.remove();
 
-        feed.appendChild(template.content);
-    });
+                feed.appendChild(template.content)
+            });
+
+            loadGesturesScript(); // ждем ответа от сервера с events
+        });
 }
 
+/**
+ * Подключаем скрипт обработки жестов
+ */
+function loadGesturesScript() {
+    let script = document.createElement('script');
+
+    script.src = "js/gestures.js";
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
 
 /**
  * Проверяем длину строки, не более 2х строк.

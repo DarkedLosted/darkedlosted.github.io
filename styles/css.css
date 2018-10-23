@@ -294,8 +294,6 @@ header
 
 .tabs-menu__tab
 {
-    /*opacity: 0.6;*/
-
     display: table-cell;
     padding: 37px 28px 37px 0;
     cursor: pointer;
