@@ -5,10 +5,15 @@
         <meta name="robots" content="noindex">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>Яндекс Дом</title>
-        <link rel="stylesheet" href="css.css">
-        <script src="js.js" defer></script>
-        <script src="gestures.js" defer></script>
-        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+        <link rel="stylesheet" href="styles/css.css">
+        <link rel="stylesheet" href="styles/video.css">
+        <script src="js/utils.js" defer></script>
+        <script src="js/js.js" defer></script>
+        <script src="js/gestures.js" defer></script>
+        <script src="js/motionCapture.js" defer></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" defer></script>
+        <script src="js/video.js" defer></script>
     </head>
     <body>
         <header>
@@ -16,7 +21,7 @@
                 <ul class='tabs-menu'>
                     <img class='logo' src="icons/yandex.png" alt="yandex">
                     <li class='tabs-menu__tab'>
-                        <a class='link checked' href='#'>События</a>
+                        <a class='link selected tab_events' href='#'>События</a>
                     </li>
                     <li class='tabs-menu__tab'>
                         <a class='link' href='#'>Сводка</a>
@@ -27,14 +32,16 @@
                     <li class='tabs-menu__tab'>
                         <a class='link' href='#'>Сценарии</a>
                     </li>
+                    <li class='tabs-menu__tab'>
+                        <a class='link tab_video'>Видеонаблюдение</a>
+                    </li>
                 </ul>
                 <img class='mobile-menu-icon' src="icons/icon_list_m.png" alt="triple line in column" onclick="menuToggle();">
             </section>
         </header>
-
             <ul class="mobile-menu">
                 <li class='mobile-menu__tab'>
-                    <a class='link' href='#'>События</a>
+                    <a class='link selected tab_events' href='#'>События</a>
                 </li>
                 <li class='mobile-menu__tab'>
                     <a class='link' href='#'>Сводка</a>
@@ -45,52 +52,118 @@
                 <li class='mobile-menu__tab'>
                     <a class='link' href='#'>Сценарии</a>
                 </li>
+                <li class='mobile-menu__tab'>
+                    <a class='link tab_video' href='#'>Видеонаблюдение</a>
+                </li>
             </ul>
-
         <main>
-            <div class='header'>Лента Событий</div>
-            <div class='feed'>
-                <template id="tmpl">
-                    <div class="card">
-                        <img src="icons/cross.svg" alt="cross" class="card__cross" onclick="this.parentElement.remove()">
-                        <div class='card__header'>
-                            <img class='card__icon' src="" alt="">
-                            <div class="card__title"></div>
-                            <div class="card__source"></div>
-                            <div class="card__time"></div>
-                        </div>
-                        <div class="card__description">
-                            <div class="card__additions">
-                                <div class="additions__top"></div>
-                                <img class='additions__image' touch-action="none" alt="">
-                                <div class="additions__temperature"></div>
-                                <div class="additions__humidity"></div>
+            <div class='events'>
+                <div class='header'>Лента Событий</div>
+                <div class='feed'>
+                    <template id="tmpl">
+                        <article class="card">
+                            <img src="icons/cross.svg" title="Закрыть" alt="cross" class="card__cross" onclick="this.parentElement.remove()">
+                            <div class='card__header'>
+                                <img class='card__icon' src="" alt="">
+                                <div class="card__title"></div>
+                                <div class="card__source" title="Источник"></div>
+                                <time datetime="..." class="card__time"></time>
                             </div>
-                        </div>
-                        <img src="icons/next-black.svg" alt="next" class="card__next">
-                    </div>
-                </template>
-                <template id="pl">
-                    <div class="player">
-                        <div class="player__header">
-                            <img class="player__icon" src="" alt="album">
-                            <div class="player__song">
-                                <div class="song__name"></div>
-                                <div class="song__control">
-                                    <input type="range" min="0" class="control__slider">
-                                    <span class="control__time"></span>
+                            <div class="card__description">
+                                <div class="card__additions">
+                                    <div class="additions__top"></div>
+                                    <img class='additions__image' touch-action="none" alt="">
+                                    <div class="additions__temperature"></div>
+                                    <div class="additions__humidity"></div>
                                 </div>
+                            </div>
+                            <img src="icons/next-black.svg" title="Перейти" alt="next" class="card__next">
+                        </article>
+                    </template>
+                    <template id="pl">
+                        <div class="player">
+                            <div class="player__header">
+                                <img class="player__icon" src="" alt="album">
+                                <div class="player__song">
+                                    <label class="song__name"></label>
+                                    <div class="song__control">
+                                        <input type="range" min="0" class="control__slider">
+                                        <span class="control__time"></span>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <div class="player__controls">
+                                <img class='controls__prev' src="icons/Prev.svg" alt="Prev">
+                                <img class='controls__next' src="icons/Next.svg" alt="Next">
+                                <input type="range" min="0" max="100" class="controls__slider">
+                                <span class="controls__volume"></span>
                             </div>
                         </div>
-                        <div class="player__controls">
-                            <img class='controls__prev' src="icons/Prev.svg" alt="Prev">
-                            <img class='controls__next' src="icons/Next.svg" alt="Next">
-                            <input type="range" min="0" max="100" class="controls__slider">
-                            <span class="controls__volume"></span>
+                    </template>
+                </div>
+            </div>
+            <div class="video-container hidden">
+                <div class="video__player">
+                    <p class="video__light-value"></p>
+                    <video class="video"  muted autoplay></video>
+                    <div class="player__panel hidden">
+                        <canvas class="canvas" width="350" height="50"></canvas>
+                        <div class="player__settings">
+                            <p>Контраст:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__contrast">
+                            <p>Яркость:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__brightness">
                         </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
+                        <img class='settings_icon' src="icons/settings.svg" alt="Шестеренка">
                     </div>
-                </template>
+                </div>
+                <div class="video__player">
+                    <p class="video__light-value"></p>
+                    <video class="video"  muted autoplay></video>
+                    <div class="player__panel hidden">
+                        <canvas class="canvas" width="350" height="50"></canvas>
+                        <div class="player__settings">
+                            <p>Контраст:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__contrast">
+                            <p>Яркость:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
+                        <img class='settings_icon' src="icons/settings.svg" alt="Шестеренка">
+                    </div>
+                </div>
+                <div class="video__player">
+                    <p class="video__light-value"></p>
+                    <video class="video"  muted autoplay></video>
+                    <div class="player__panel hidden">
+                        <canvas class="canvas" width="350" height="50"></canvas>
+                        <div class="player__settings">
+                            <p>Контраст:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__contrast">
+                            <p>>Яркость:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
+                        <img class='settings_icon' src="icons/settings.svg" alt="Шестеренка">
+                    </div>
+                </div>
+                <div class="video__player">
+                    <p class="video__light-value"></p>
+                    <video class="video" muted autoplay></video>
+                    <div class="player__panel hidden">
+                        <canvas class="canvas" width="350" height="50"></canvas>
+                        <div class="player__settings">
+                            <p>Контраст:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__contrast">
+                            <p>Яркость:</p>
+                            <input type="range" min='1' max='100' value='10' class="input__brightness">
+                        </div>
+                        <button class="player__button" title="Все видео">Все видео</button>
+                        <img class='settings_icon' src="icons/settings.svg" alt="Шестеренка">
+                    </div>
+                </div>
             </div>
         </main>
         <footer>
