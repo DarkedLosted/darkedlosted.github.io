@@ -194,6 +194,7 @@ header
     white-space: nowrap;
     display: flex;
     margin-top: 20px;
+    align-items: center;
 }
 
 .controls__prev

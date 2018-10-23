@@ -206,7 +206,7 @@ function init() {
 
                 if (elem.data && elem.data.image) {
                     image.src = elem.data.image;
-                    image.setAttribute('srcset', 'icons/pil.jpg 832w, icons/pil-3x.jpg 2496w');
+                    image.setAttribute('srcset', 'icons/pil.jpg 832w 1x, icons/pil-3x.jpg 2496w 3x');
                     image.setAttribute('sizes', '(max-width: 620px) 832px, (min-width: 1400) 2496px');
                     image.style.visibility = 'hidden';
                     top.style.background = `url(${elem.data.image})`;
