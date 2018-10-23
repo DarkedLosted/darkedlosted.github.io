@@ -145,7 +145,7 @@ var data = {
             "description": "Робопылесос не смог сменить свое местоположение в течение последних 3 минут. Похоже, ему нужна помощь.",
             "icon": "cam",
             "data": {
-                "image": "icons/pil.png"
+                "image": "icons/pil-2x.jpg"
             },
             "size": "l"
         },
@@ -168,13 +168,13 @@ function init() {
     let feed = document.querySelector('.feed'),
         icons = u.getIcons();
 
-    fetch('http://localhost:8000/api/events')
-        .then(data => {
-            return data.json()
-        })
-        .then(res => {
-            res.map(function(elem) {
-                var template = document.importNode(tmpl, true),
+    // fetch('http://localhost:8000/api/events') // закомментировал, т.к. еще не проверили верстку...
+    //     .then(data => {
+    //         return data.json()
+    //     })
+    //     .then(res => {
+            data.events.map(function(elem) {
+                let template = document.importNode(tmpl, true),
                     card = template.content.querySelector(".card"),
                     icon = template.content.querySelector(".card__icon"),
                     title = template.content.querySelector(".card__title"),
@@ -189,83 +189,86 @@ function init() {
                     top = template.content.querySelector('.additions__top'),
                     cardClassList = elem.type === 'critical' ? ' error card_size_' : ' card_size_';
 
-        card.classList += cardClassList + elem.size;
-        icon.src = icons[elem.icon];
-        icon.alt = elem.icon;
-        title.innerHTML = elem.title;
-        source.innerHTML = elem.source;
-        time.innerHTML = elem.time;
-        textDescriptionNode.innerHTML = elem.description;
-        description.insertBefore(textDescriptionNode, description.firstChild);
-        temperature.innerHTML = elem.data && elem.data.temperature
-            ? `Температура: ${ (`${elem.data.temperature } C`).bold()}`
-            : '';
-        humidity.innerHTML = elem.data && elem.data.temperature ? `${'' +
-            'Влажность: '}${ (`${elem.data.humidity }%`).bold()}`
-            : '';
-        image.src = elem.data && elem.data.image
-            ? elem.data.image
-            : (elem.data && elem.data.type ? 'icons/Richdata.png' : '');
+                card.classList += cardClassList + elem.size;
+                icon.src = icons[elem.icon];
+                icon.alt = elem.icon;
+                title.innerHTML = elem.title;
+                source.innerHTML = elem.source;
+                time.innerHTML = elem.time;
+                textDescriptionNode.innerHTML = elem.description;
+                description.insertBefore(textDescriptionNode, description.firstChild);
+                temperature.innerHTML = elem.data && elem.data.temperature
+                    ? `Температура: ${ (`${elem.data.temperature } C`).bold()}`
+                    : temperature.remove();
+                humidity.innerHTML = elem.data && elem.data.temperature ? `${'' +
+                    'Влажность: '}${ (`${elem.data.humidity }%`).bold()}`
+                    : humidity.remove();
 
-        if (elem.data && elem.data.image) {
-            image.style.visibility = 'hidden';
-            top.style.background = `url(${elem.data.image})`;
+                if (elem.data && elem.data.image) {
+                    image.src = elem.data.image;
+                    image.setAttribute('srcset', 'icons/pil.jpg 832w, icons/pil-3x.jpg 2496w');
+                    image.setAttribute('sizes', '(max-width: 620px) 832px, (min-width: 1400) 2496px');
+                    image.style.visibility = 'hidden';
+                    top.style.background = `url(${elem.data.image})`;
 
-            addTouchInfoControls(description);
-        } else {
-            top.remove();
-        }
+                    addTouchInfoControls(description);
+                } else {
+                    image.src = (elem.data && elem.data.type ? 'icons/Richdata.jpg' : '');
 
-        elem.type === 'critical' ? cardCross.src = 'icons/cross-white.svg' : undefined;
+                    top.remove();
+                }
 
-        checkOnTextOverflow(title, elem);
+                elem.type === 'critical' ? cardCross.src = 'icons/cross-white.svg' : undefined;
 
-        if (elem.data && elem.data.buttons) {
-            elem.data.buttons.map((text) => {
-                let button = document.createElement('button');
+                checkOnTextOverflow(title, elem);
 
-                button.classList = `button${ text === 'Да' ? ' button_type_yes' : ''}`;
-                button.innerText = text;
-                description.appendChild(button);
-            });
-        }
+                if (elem.data && elem.data.buttons) {
+                    elem.data.buttons.map((text) => {
+                        let button = document.createElement('button');
 
-        if (!elem.data) {
-            template.content.querySelector('.card__additions').remove();
-        }
+                        button.classList = `button${ text === 'Да' ? ' button_type_yes' : ''}`;
+                        button.innerText = text;
+                        description.appendChild(button);
+                    });
+                }
 
-        if (elem.data && elem.data.albumcover) {
-            let playerTemplate = document.importNode(pl, true),
-                albumIcon = playerTemplate.content.querySelector(".player__icon"),
-                trackName = playerTemplate.content.querySelector(".song__name"),
-                trackLength = playerTemplate.content.querySelector(".control__slider"),
-                volume = playerTemplate.content.querySelector(".controls__slider"),
-                volumeValue = playerTemplate.content.querySelector(".controls__volume"),
-                timeValue = playerTemplate.content.querySelector(".control__time");
+                if (!elem.data) {
+                    template.content.querySelector('.card__additions').remove();
+                }
 
-            albumIcon.src = elem.data.albumcover;
-            trackName.innerText = `${elem.data.artist } - ${ elem.data.track.name}`;
-            trackLength.innerText = elem.data.track.length;
-            trackLength.max = elem.data.track.length;
-            volume.value = elem.data.volume;
-            volumeValue.innerText = `${elem.data.volume }%`;
-            timeValue.innerText = elem.data.track.length;
+                if (elem.data && elem.data.albumcover) {
+                    let playerTemplate = document.importNode(pl, true),
+                        albumIcon = playerTemplate.content.querySelector(".player__icon"),
+                        trackName = playerTemplate.content.querySelector(".song__name"),
+                        trackLength = playerTemplate.content.querySelector(".control__slider"),
+                        volume = playerTemplate.content.querySelector(".controls__slider"),
+                        volumeValue = playerTemplate.content.querySelector(".controls__volume"),
+                        timeValue = playerTemplate.content.querySelector(".control__time");
 
-            volume.oninput = function() {
-                volumeValue.innerText = `${volume.value }%`;
-            };
+                    albumIcon.src = elem.data.albumcover;
+                    trackName.innerText = `${elem.data.artist } - ${ elem.data.track.name}`;
+                    trackLength.innerText = elem.data.track.length;
+                    trackLength.max = elem.data.track.length;
+                    volume.value = elem.data.volume;
+                    volumeValue.innerText = `${elem.data.volume }%`;
+                    timeValue.innerText = elem.data.track.length;
 
-            card.appendChild(playerTemplate.content);
-        }
+                    volume.oninput = function() {
+                        volumeValue.innerText = `${volume.value }%`;
+                    };
 
-        elem.description ? undefined : description.remove();
-        elem.data && (elem.data.image || elem.data.type === 'graph') ? undefined : image.remove();
+                    card.appendChild(playerTemplate.content);
+                }
+
+                elem.description ? undefined : description.remove();
+                elem.data && (elem.data.image || elem.data.type === 'graph') ? undefined : image.remove();
 
                 feed.appendChild(template.content)
-            });
 
-            loadGesturesScript(); // ждем ответа от сервера с events
-        });
+                loadGesturesScript(); // ждем ответа от сервера с events
+            });
+        // })
+       // .then(() => loadGesturesScript()); // ждем ответа от сервера с events
 }
 
 /**
