@@ -7,13 +7,17 @@
         <title>Яндекс Дом</title>
         <link rel="stylesheet" href="styles/css.css">
         <link rel="stylesheet" href="styles/video.css">
-        <script src="js/utils.js" defer></script>
-        <script src="js/js.js" defer></script>
-        <script src="https://code.jquery.com/pep/0.4.3/pep.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" defer></script>
-        <script src="js/motionCapture.js" defer></script>
-        <script src="js/video.js" defer></script>
-        <script src="js/gestures.js" defer></script>
+        <!--<script src="js/utils.js" defer></script>-->
+        <!--<script src="js/js.js" defer></script>-->
+        <!--<script src="https://code.jquery.com/pep/0.4.3/pep.js" defer></script>-->
+
+        <!--<script src="js/motionCapture.js" defer></script>-->
+        <!--<script src="js/video.js" defer></script>-->
+        <!--<script src="js/gestures.js" defer></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
+        <script src="dist/bundle.js"></script>
+        <script>require(["main"]);</script>
     </head>
     <body>
         <header>
@@ -60,7 +64,7 @@
             <div class='events'>
                 <div class='header'>Лента Событий</div>
                 <div class='feed'>
-                    <template id="tmpl">
+                    <template class="tmpl">
                         <article class="card">
                             <img src="icons/cross.svg" title="Закрыть" alt="cross" class="card__cross" onclick="this.parentElement.remove()">
                             <div class='card__header'>
@@ -80,7 +84,7 @@
                             <img src="icons/next-black.svg" title="Перейти" alt="next" class="card__next">
                         </article>
                     </template>
-                    <template id="pl">
+                    <template class="pl">
                         <div class="player">
                             <div class="player__header">
                                 <img class="player__icon" src="" alt="album">

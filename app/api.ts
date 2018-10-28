@@ -1,8 +1,10 @@
-const fs = require('fs');
+import fs from 'fs';
+import { Response } from 'express';
 
 module.exports = {
-    getTime: (time) => {
-        let timeNow = (new Date()) - time,
+    getTime: (time: number) => {
+        const date: Date = new Date();
+        const timeNow = +date - time,
             hours = Math.floor(timeNow / (100 * 60 * 60)),
             minutes = Math.floor(timeNow / (1000 * 60)),
             seconds = Math.floor(timeNow / 1000);
@@ -10,29 +12,29 @@ module.exports = {
         return `${hours}:${minutes}:${seconds}`;
     },
 
-    _readFile: (path) => {
+    _readFile: (path: string) => {
         return new Promise((resolve, reject) => {
-            fs.readFile(path, 'utf8', (err, data) => {
+            fs.readFile(path, 'utf8', (err: Error, data) => {
                 data ? resolve(JSON.parse(data)) : reject(err);
             });
         })
     },
 
-    getEvents: async (params, response) => {
+    getEvents: async (params: {limit: string, offset: string, types: []}, response: Response) => {
         let data = await module.exports._readFile(__dirname.concat('/routing/api/events/events.json')),
-            result = [],
-            types = params.types,
-            limit = parseInt(params.limit),
+            result: string[] = [],
             offset = parseInt(params.offset) || 1,
-            isSuccess = false,
-            docTypes = await module.exports._readFile(__dirname.concat('/statuses.json'));
+            isSuccess = false;
+        const types = params.types;
+        const limit = parseInt(params.limit);
+        const docTypes = await module.exports._readFile(__dirname.concat('/statuses.json'));
 
         data = data.events;
 
         if (types) {
-            types.forEach((type) => {
+            types.forEach((type: string) => {
                 if (docTypes.types.includes(type)) {
-                    result = result.concat(data.filter((event) => event.type === type));
+                    result = result.concat(data.filter((event: {type: string}) => event.type === type));
                     isSuccess = true;
                 } else {
                     isSuccess = false;
