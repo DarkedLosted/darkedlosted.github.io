@@ -2,12 +2,12 @@ import Store from './store.js';
 import Dispatcher from './dispatcher.js';
 
 const appDispatcher = new Dispatcher();
-const someStore = new Store(appDispatcher);
-someStore.addReduce(function(action) {
+const tabStore = new Store(appDispatcher);
+tabStore.addReduce(function(action) {
     const state = this.getState();
 
     switch(action.type) {
-        case 'CHANGE_TAB_SELECT': this.updateState({
+        case 'TAB_SELECTED': this.updateState({
             ...state,
             ...action.value
         });
@@ -17,23 +17,18 @@ someStore.addReduce(function(action) {
     }
 });
 
-appDispatcher.register(someStore);
+appDispatcher.register(tabStore);
 
-someStore.addChangeListener(() => {
-    console.log('realyl work!');
-});
-
-
-appDispatcher.dispatch({
-    type: 'CHANGE_TAB_SELECT',
-    value: { currentTab: '.div' }
+tabStore.addChangeListener((payload) => {
+    console.log('Store updated! payload:', payload);
 });
 
 appDispatcher.dispatch({
-    type: 'CHANGE_TAB_SELECT',
-    value: { asd: 'sds' }
+    type: 'TAB_SELECTED',
+    value: { currentTab: 'foo' }
 });
 
-console.log(appDispatcher);
-console.log(someStore);
-console.log(someStore.getState());
+appDispatcher.dispatch({
+    type: 'TAB_SELECTED',
+    value: { currentTab: 'bar' }
+});

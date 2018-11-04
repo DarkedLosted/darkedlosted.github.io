@@ -58,7 +58,7 @@ export default class Store {
      * Trigger 'change' event for all subscribers
      */
     _hasChange() {
-        this._emitter.emit('change');
+        this._emitter.emit('change', this._state);
     }
 
     /**
