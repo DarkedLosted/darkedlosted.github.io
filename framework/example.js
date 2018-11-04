@@ -19,7 +19,7 @@ someStore.addReduce(function(action) {
 
 appDispatcher.register(someStore);
 
-someStore.addChangeListner(() => {
+someStore.addChangeListener(() => {
     console.log('realyl work!');
 });
 

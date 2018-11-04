@@ -43,4 +43,55 @@ npm start
 
 на Мобильном устройсте с ОС `Android`
 
+<h3>Задание Архитектура</h3>
 
+**How to**
+
+_Add imports to your file_
+```
+import Store from './store.js'
+import Dispatcher from './dispatcher.js'
+```
+_Create dispatcher instance_
+```
+const appDispatcher = new Dispatcher();
+```
+_Create store instance and pass on dispatcher as argument_
+```
+const someStore = new Store(appDispatcher);
+```
+_describe your reducer and add him to store_
+```
+someStore.addReduce(function(action) {
+    const state = this.getState();
+
+    switch(action.type) {
+        case 'CHANGE_TAB_SELECT': this.updateState({
+            ...state,
+            ...action.value
+        });
+        break;
+
+        default: this.updateState(state);
+    }
+});
+```
+_register store_
+```
+appDispatcher.register(someStore);
+```
+All code you can find in `example.js`
+
+**API**
+
+* Store
+    * `addChangeListener` - Add listener on store update
+    * `removeChangeListener` - Remove listener on store update
+    * `getState` - Return initial state of the store 
+    * `updateState` - Update state in the store, and trigger event 'Change'
+    * `getDispatcher` - Get connected dispatcher of the store
+    * `addReduce` - Add reduce for the store, to processing actions
+* Dispatcher
+    * `register` - Add stores callback
+    * `unregister` - Remove stores callback
+    * `dispatch` - Dispatch action to all registered stores

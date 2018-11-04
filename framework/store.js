@@ -19,7 +19,7 @@ export default class Store {
     }
 
     /**
-     * return initial state of the store
+     * Return initial state of the store
      * @returns {{}}
      */
     getInitialState() {
@@ -32,7 +32,7 @@ export default class Store {
      */
     updateState(state) {
         this._state = state;
-        this.hasChange();
+        this._hasChange();
     }
 
     /**
@@ -57,7 +57,7 @@ export default class Store {
     /**
      * Trigger 'change' event for all subscribers
      */
-    hasChange() {
+    _hasChange() {
         this._emitter.emit('change');
     }
 
@@ -65,7 +65,7 @@ export default class Store {
      * Add listener on store update
      * @param callback
      */
-    addChangeListner(callback) {
+    addChangeListener(callback) {
         this._emitter.subscribe('change', callback);
     }
 
@@ -73,7 +73,7 @@ export default class Store {
      * Remove listener on store update
      * @param callback
      */
-    removeChangeListner(callback) {
+    removeChangeListener(callback) {
         this._emitter.unsubscribe('change', callback);
     }
 }
