@@ -3,6 +3,12 @@ export default class EventEmitter {
         this._events = Object.create(null);
     }
 
+    /**
+     * Subscribe callback on event
+     * @param eventName
+     * @param callback
+     * @returns {EventEmitter}
+     */
     subscribe(eventName, callback) {
         if (!this._events[eventName]) {
             this._events[eventName] = [];
@@ -13,6 +19,12 @@ export default class EventEmitter {
         return this;
     }
 
+    /**
+     * Unsubscribe callback on event
+     * @param eventName
+     * @param callback
+     * @returns {EventEmitter}
+     */
     unsubscribe(eventName, callback) {
         if (typeof callback !== 'function') {
             throw Error('callback must be function');
@@ -23,12 +35,17 @@ export default class EventEmitter {
         }
 
         if (this._events[eventName].length > 1) {
-            this._events[eventName] = this._events[eventName].filter((fn) => fn.toString() !== callback.toString() );
+            this._events[eventName] = this._events[eventName].filter((fn) => fn.toString() !== callback.toString());
         } else {
             delete this._events[eventName];
         }
     }
 
+    /**
+     * Call all callbacks registered on this event
+     * @param eventName
+     * @param payload
+     */
     emit(eventName, payload) {
         const event = this._events[eventName];
 
