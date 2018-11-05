@@ -1,6 +1,5 @@
 const http = require('http');
 const express = require('express');
-const fs = require('fs');
 const cors = require('cors');
 const api = require('./api');
 const app = express();
@@ -17,6 +16,16 @@ app
     })
     .get('/status', (request, response) => {
         response.send(api.getTime(date))
+    })
+    .get('/state', async (request, response) => {
+        const state = await api.getState();
+
+        response.send(state)
+    })
+    .post('/state', (request, response) => {
+        const state = request.body;
+
+        api.setState(state)
     })
     .get('/api/events', (request, response) => {
         let hasTypes = request.query.type,
