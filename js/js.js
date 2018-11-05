@@ -1,4 +1,6 @@
 'use strict';
+import Store from '../framework/store.js';
+import Dispatcher from '../framework/dispatcher.js';
 
 var data = {
     "events": [
@@ -341,40 +343,59 @@ function addTouchInfoControls(target) {
     target.appendChild(touchCard);
 }
 
-function initTabToggleListner() {
-    let tabVideo = Array.from(document.getElementsByClassName('tab_video')),
-        tabEvents = Array.from(document.getElementsByClassName('tab_events')),
+function tabClear(tabs) {
+    tabs.forEach((tab) => {
+        tab.classList.remove('selected');
+    })
+}
+
+function initTabToggleListner(store, dispatch) {
+    let tabs = Array.from(document.querySelectorAll('.tabs-menu__tab a')),
         video = document.querySelector('.video-container'),
         events = document.querySelector('.events');
 
-    tabEvents.forEach((elem) => {
-        elem.addEventListener('click', () => {
-            if (events.classList.contains('hidden')) {
-                tabEvents.forEach((elem) => {
-                    elem.classList.toggle('selected');
-                });
-                video.classList.toggle('hidden');
-                elem.classList.toggle('selected');
-                events.classList.toggle('hidden');
-            }
-        });
-    });
+    tabs.forEach((elem) => {
+        const tabName = elem.dataset.name;
 
-    tabVideo.forEach((elem) => {
         elem.addEventListener('click', () => {
-            if (video.classList.contains('hidden')) {
-                tabVideo.forEach((elem) => {
-                    elem.classList.toggle('selected');
-                });
-                video.classList.toggle('hidden');
-                elem.classList.toggle('selected');
-                events.classList.toggle('hidden');
+            dispatch.dispatch({
+                type: 'TAB_SELECTED',
+                value: { tabName: tabName ? tabName : ''}
+            });
+        });
+        store.addChangeListener((payload) => {
+            if (tabName && tabName === payload.tabName) {
+                if (!elem.classList.contains('selected')) {
+                    tabClear(tabs);
+                    elem.classList.add('selected');
+                    video.classList.toggle('hidden');
+                    events.classList.toggle('hidden');
+                }
             }
         });
     });
 }
 
 (function() {
+    const appDispatcher = new Dispatcher();
+    const tabStore = new Store(appDispatcher);
+
+    tabStore.addReduce(function(action) {
+        const state = this.getState();
+
+        switch(action.type) {
+            case 'TAB_SELECTED': this.updateState({
+                ...state,
+                ...action.value
+            });
+            break;
+
+            default: this.updateState(state);
+        }
+    });
+
+    appDispatcher.register(tabStore);
+
     init();
-    initTabToggleListner();
+    initTabToggleListner(tabStore, appDispatcher);
 })();

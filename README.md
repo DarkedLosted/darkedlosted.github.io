@@ -52,9 +52,9 @@ _Add imports to your file_
 import Store from './store.js'
 import Dispatcher from './dispatcher.js'
 ```
-`or in html`
+`in html add type and crossorigin`
 ```
-<script type="module" src="framework/example.js"></script>
+<script type="module" src="framework/example.js" crossorigin="anonymous"></script>
 ```
 _Create dispatcher instance_
 ```

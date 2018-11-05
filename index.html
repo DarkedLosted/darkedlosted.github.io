@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="styles/css.css">
         <link rel="stylesheet" href="styles/video.css">
         <script src="js/utils.js" defer></script>
-        <script src="js/js.js" defer></script>
+        <script type="module" src="js/js.js" crossorigin="anonymous" defer></script>
         <script src="https://code.jquery.com/pep/0.4.3/pep.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" defer></script>
         <script src="js/motionCapture.js" defer></script>
@@ -21,7 +21,7 @@
                 <ul class='tabs-menu'>
                     <img class='logo' src="icons/logo.jpg" alt="yandex">
                     <li class='tabs-menu__tab'>
-                        <a class='link selected tab_events' href='#'>События</a>
+                        <a class='link selected tab_events' data-name="events" href='#'>События</a>
                     </li>
                     <li class='tabs-menu__tab'>
                         <a class='link' href='#'>Сводка</a>
@@ -33,7 +33,7 @@
                         <a class='link' href='#'>Сценарии</a>
                     </li>
                     <li class='tabs-menu__tab'>
-                        <a class='link tab_video'>Видеонаблюдение</a>
+                        <a class='link tab_video' data-name="video">Видеонаблюдение</a>
                     </li>
                 </ul>
                 <img class='mobile-menu-icon' src="icons/icon_list_m.jpg" alt="triple line in column" onclick="menuToggle();">
