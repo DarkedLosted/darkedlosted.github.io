@@ -1,6 +1,16 @@
 const fs = require('fs');
 
 module.exports = {
+    getState: async () => {
+        const state = await module.exports._readFile(__dirname.concat('/state.json'));
+
+        return state;
+    },
+
+    setState: (state) => {
+        module.exports._writeFile(__dirname.concat('/state.json'), JSON.stringify(state));
+    },
+
     getTime: (time) => {
         let timeNow = (new Date()) - time,
             hours = Math.floor(timeNow / (100 * 60 * 60)),
@@ -14,6 +24,16 @@ module.exports = {
         return new Promise((resolve, reject) => {
             fs.readFile(path, 'utf8', (err, data) => {
                 data ? resolve(JSON.parse(data)) : reject(err);
+            });
+        })
+    },
+
+    _writeFile: (name, file) => {
+        return new Promise((resolve, reject) => {
+            fs.writeFile(name, file, 'utf8', (err) => {
+                if (err) {
+                    reject(err);
+                }
             });
         })
     },

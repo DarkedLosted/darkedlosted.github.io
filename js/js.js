@@ -376,7 +376,20 @@ function initTabToggleListner(store, dispatch) {
     });
 }
 
-(function() {
+function sendState(state) {
+    const stateJSN = JSON.stringify(state);
+
+    fetch('http://localhost:8000/state', {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: stateJSN
+    })
+}
+
+(async function() {
     const appDispatcher = new Dispatcher();
     const tabStore = new Store(appDispatcher);
 
@@ -388,6 +401,12 @@ function initTabToggleListner(store, dispatch) {
                 ...state,
                 ...action.value
             });
+            sendState(this.getState());
+            break;
+            case 'PAGE:LOAD': this.updateState({
+                ...state,
+                ...action.value
+            });
             break;
 
             default: this.updateState(state);
@@ -396,6 +415,17 @@ function initTabToggleListner(store, dispatch) {
 
     appDispatcher.register(tabStore);
 
-    init();
-    initTabToggleListner(tabStore, appDispatcher);
+    fetch('http://localhost:8000/state')
+        .then(data => {
+            return data.json()
+        })
+        .then((state) => {
+            appDispatcher.dispatch({
+                type: 'PAGE:LOAD',
+                value: { tabName: state.tabName }
+            });
+
+            init();
+            initTabToggleListner(tabStore, appDispatcher);
+        });
 })();
