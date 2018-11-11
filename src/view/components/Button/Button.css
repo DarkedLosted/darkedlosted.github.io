@@ -1,0 +1,25 @@
+.Button
+{
+    background: #E5E5E5;
+    border-radius: 8px;
+    border: none;
+    text-decoration: none;
+    outline: none;
+    padding: 15px 52px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-right: 18px;
+    transition: all ease 0.3s;
+}
+
+.Button:active
+{
+    box-shadow: 0 3px 0 #333333;
+    top: 3px;
+}
+
+.Button_yes
+{
+    background: #FFD93E;
+}

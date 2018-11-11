@@ -4,6 +4,9 @@ import { cn } from '@bem-react/classname';
 import './Event.css';
 import closeIcon from '../icons/cross.svg';
 import nextIcon from '../icons/next-black.svg';
+import {Button} from "../Button/Button";
+import {RegistryConsumer} from "@bem-react/di";
+import {MusicPlayer, MusicPlayerProps} from "../MusicPlayer/MusicPlayer";
 
 const cnEvent = cn('Event');
 
@@ -31,7 +34,6 @@ export interface EventProps {
     icon: string,
     description?: string | null,
     data?: EventData
-
 }
 
 export class Event extends React.Component<EventProps> {
@@ -46,7 +48,10 @@ export class Event extends React.Component<EventProps> {
         const temperature = event.data && event.data.temperature;
         const humidity = event.data && event.data.humidity;
         const description = event.description;
-
+        const image = event.data && event.data.image;
+        const graph = event.data && event.data.type;
+        const buttons = event.data && event.data.buttons;
+        const mediaPlayer = event.data && event.data.albumcover;
 
         return (
             <article className={ cnEvent({ size: event.size, error: event.type === 'critical' }) }>
@@ -61,12 +66,19 @@ export class Event extends React.Component<EventProps> {
                     { event.description }
                     { additions && <div className={ cnEvent('Additions') }>
                         <div className={ cnEvent('Top') } />
-                        <img touch-action='none' className={ cnEvent('Image') } src={ event.data && event.data.image } />
-                        { temperature && <div className={ cnEvent('Temperature') }>{ temperature }</div> }
-                        { humidity && <div className={ cnEvent('Humidity') }>{ humidity }</div> }
+                        { (image || graph) && <img touch-action='none' className={ cnEvent('Image') } src={ require(`../icons/${ graph ? 'Richdata.jpg' : image }`) } /> }
+                        { temperature && <div className={ cnEvent('Temperature') }>{ `Температура: ` }<b>{ `${ temperature } C` }</b></div> }
+                        { humidity && <div className={ cnEvent('Humidity') }>{ `Влажность: ` }<b>{ `${ humidity }%` }</b></div> }
                     </div> }
+                    { buttons && <RegistryConsumer>
+                        {
+                            () => { return buttons.map((button: string, key: number) => <Button key={ key } { ...{ text: button} } />) }
+                        }
+                    </RegistryConsumer>
+                    }
                 </div> }
                 <img src={ nextIcon } title='Перейти' alt='next' className={ cnEvent('Next') }/>
+                { mediaPlayer && <MusicPlayer { ...event.data as MusicPlayerProps} /> }
             </article>
         )
     }
