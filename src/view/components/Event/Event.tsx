@@ -3,6 +3,7 @@ import { cn } from '@bem-react/classname';
 
 import './Event.css';
 import closeIcon from '../icons/cross.svg';
+import closeWhiteIcon from '../icons/cross-white.svg';
 import nextIcon from '../icons/next-black.svg';
 import {Button} from "../Button/Button";
 import {RegistryConsumer} from "@bem-react/di";
@@ -55,7 +56,7 @@ export class Event extends React.Component<EventProps> {
 
         return (
             <article className={ cnEvent({ size: event.size, error: event.type === 'critical' }) }>
-                <img src={ closeIcon } title='Закрыть' className={ cnEvent('Cross') }/>
+                <img src={ event.type === 'critical' ? closeWhiteIcon : closeIcon } title='Закрыть' className={ cnEvent('Cross') }/>
                 <div className={ cnEvent('Header') }>
                     <img className={ cnEvent('Icon') } src={ icon } title='' alt=''/>
                     <div className={ cnEvent('Title') }>{ event.title }</div>
