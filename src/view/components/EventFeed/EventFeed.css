@@ -1,0 +1,39 @@
+.EventFeed
+{
+    height: 100%;
+    max-width: 1024px;
+    min-width: 300px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+
+    grid-template-rows: minmax(100px, auto);
+    grid-gap: 19px 20px;
+    grid-auto-flow: dense;
+}
+
+.EventFeed-Header
+{
+    width: 1024px;
+    font-size: 3.1rem;
+    font-weight: bold;
+    margin: 34px auto 32px;
+    color: #333333;
+}
+
+@media(max-width: 755px)
+{
+    .EventFeed-Header
+    {
+        margin: 36px auto 18px;
+    }
+}
+
+@media(max-width: 550px)
+{
+    .EventFeed
+    {
+        grid-template-columns: minmax(280px, 1fr);
+        grid-gap: 16px;
+    }
+}

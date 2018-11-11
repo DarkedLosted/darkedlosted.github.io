@@ -1,0 +1,43 @@
+.Footer
+{
+    display: inline-table;
+    margin: 0;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    color: #333333;
+    list-style: none;
+    line-height: 35px;
+    height:64px;
+}
+
+.Footer-Tab
+{
+    display: table-cell;
+    padding: 17px 14px;
+}
+
+.Footer_side_right
+{
+    float: right;
+    line-height: 68px;
+    margin-right: 24px;
+    font-size: 1.1rem;
+}
+
+@media all and (max-width: 550px) {
+    .Footer
+    {
+        line-height: 8px;
+        height: 32px;
+    }
+
+    .Footer-Tab
+    {
+        padding: 10px 10px 0 0;
+    }
+
+    .Footer-Tab_side_right
+    {
+        line-height: 20px;
+    }
+}

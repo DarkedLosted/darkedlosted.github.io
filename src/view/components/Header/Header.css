@@ -1,0 +1,51 @@
+.Header
+{
+    width: 100%;
+    height: 92px;
+    border-bottom: 1px solid #dedddb;
+}
+
+.Header-Logo
+{
+    margin: 0 21px 0 0;
+    vertical-align: top;
+}
+
+.Header-TabsMenu
+{
+    display: inline-table;
+    margin: 0;
+    font-size: 16px;
+    color: #333333;
+    list-style: none;
+    line-height: 34px;
+    font-weight: bold;
+}
+
+.Header-TabsMenu_selected
+{
+    color: black !important;
+}
+
+.Header-TabsMenuTab
+{
+    display: table-cell;
+    padding: 37px 28px 37px 0;
+    cursor: pointer;
+}
+
+.Header-MobileMenuIcon
+{
+    display: none;
+    cursor: pointer;
+}
+
+@media(max-width: 755px)
+{
+    .Header-MobileMenuIcon
+    {
+        display: block;
+        float: right;
+        margin: 27px 14px auto auto;
+    }
+}
