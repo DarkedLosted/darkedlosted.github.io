@@ -116,17 +116,6 @@
     grid-column: span 2;
 }
 
-.Event_size_s .Event-Time
-{
-    grid-column: span 2;
-    text-align: left;
-}
-
-.Event_size_s .Event-Source
-{
-    grid-column: span 3;
-}
-
 .Event_size_s .Event-Header
 {
     padding-bottom: 20px;
@@ -179,21 +168,4 @@
     user-select: none;
     -webkit-user-select: none;
     touch-action: none;
-}
-
-@media(max-width: 975px)
-{
-    .Event_size_l
-    {
-        grid-column: span 6;
-    }
-
-    .Event_size_s
-    {
-        grid-column: span 3;
-    }
-}
-
-@media(max-width: 550px) {
-
 }

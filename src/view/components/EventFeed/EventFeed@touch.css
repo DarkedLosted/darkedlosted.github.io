@@ -1,0 +1,13 @@
+.EventFeed
+{
+    grid-template-columns: minmax(280px, 1fr);
+    grid-gap: 16px;
+}
+
+.EventFeed-Header
+{
+    margin: 36px auto 18px;
+    font-size: 3.1rem;
+    font-weight: bold;
+    color: #333333;
+}

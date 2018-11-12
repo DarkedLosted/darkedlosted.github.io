@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 
 const cnFooter = cn('Footer');
 
-import './Footer.css'
+// import './Footer.css'
 
 export class Footer extends React.Component {
     public render() {

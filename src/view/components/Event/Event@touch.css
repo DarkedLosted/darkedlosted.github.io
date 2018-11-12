@@ -1,48 +1,48 @@
 .Event
-    {
-        grid-column: span 1;
-        min-height: 101px;
-    }
+{
+    grid-column: span 1;
+    min-height: 101px;
+}
 
-    .Event-Header
-    {
-        grid-gap: 16px;
-    }
+.Event-Header
+{
+    grid-gap: 16px;
+}
 
-    .Event-Title
-    {
-        margin: auto 0;
-    }
+.Event-Title
+{
+    margin: auto 0;
+}
 
-    .Event-Time
-    {
-        text-align: right !important;
-    }
+.Event-Time
+{
+    text-align: right !important;
+}
 
-    .Event-Next
-    {
-        right: 15px;
-        bottom: 15px;
-    }
+.Event-Next
+{
+    right: 15px;
+    bottom: 15px;
+}
 
-    .Event-Cross
-    {
-        right: 15px;
-        top: 15px;
-    }
+.Event-Cross
+{
+    right: 15px;
+    top: 15px;
+}
 
-    .Event-Icon
-    {
-        width: 36px;
-        height: 36px;
-    }
+.Event-Icon
+{
+    width: 36px;
+    height: 36px;
+}
 
-    .Event_size_s .Event-Time
-    {
-        grid-column: span 1;
-    }
+.Event_size_s .Event-Time
+{
+    grid-column: span 1;
+}
 
-    .Event_size_s .Event-Source
-    {
-        grid-column: span 2;
-    }
+.Event_size_s .Event-Source
+{
+    grid-column: span 2;
+}

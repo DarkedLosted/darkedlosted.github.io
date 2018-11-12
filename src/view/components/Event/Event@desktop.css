@@ -1,0 +1,10 @@
+.Event_size_s .Event-Time
+{
+    grid-column: span 2;
+    text-align: left;
+}
+
+.Event_size_s .Event-Source
+{
+    grid-column: span 3;
+}

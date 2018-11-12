@@ -1,14 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { App } from './view/App';
-import {Header} from "./view/components/Header/Header";
-import {Footer} from "./view/components/Footer/Footer";
 import mobileDetector from 'mobile-detect';
 
 const ua = new mobileDetector(navigator.userAgent);
-const device = ua.mobile() ? 'touch' : 'desktop';
+const isMobile = ua.mobile();
 
-ReactDOM.render(<App />, document.getElementsByTagName('main')[0]);
-ReactDOM.render(<Footer />, document.getElementsByTagName('footer')[0]);
-ReactDOM.render(<Header />, document.getElementsByTagName('header')[0]);
+if (isMobile) {
+    import('./view/components/App/App@touch').then(({ App }) => {
+        ReactDOM.render(<App />, document.getElementsByTagName('main')[0]);
+    });
+    import('./view/components/Footer/Footer@touch').then(({ Footer }) => {
+        ReactDOM.render(<Footer />, document.getElementsByTagName('footer')[0]);
+    });
+    import('./view/components/Header/Header@touch').then(({ Header }) => {
+        ReactDOM.render(<Header />, document.getElementsByTagName('header')[0]);
+    });
+} else {
+    import('./view/components/Header/Header@desktop').then(({ Header }) => {
+        ReactDOM.render(<Header />, document.getElementsByTagName('header')[0]);
+    });
+    import('./view/components/Footer/Footer@desktop').then(({ Footer }) => {
+       ReactDOM.render(<Footer />, document.getElementsByTagName('footer')[0]);
+   });
+    import('./view/components/App/App@desktop').then(({ App }) => {
+       ReactDOM.render(<App />, document.getElementsByTagName('main')[0]);
+   });
+}

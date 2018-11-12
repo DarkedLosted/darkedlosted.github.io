@@ -5,11 +5,13 @@ import './Event.css';
 import closeIcon from '../icons/cross.svg';
 import closeWhiteIcon from '../icons/cross-white.svg';
 import nextIcon from '../icons/next-black.svg';
-import {Button} from "../Button/Button";
-import {RegistryConsumer} from "@bem-react/di";
-import {MusicPlayer, MusicPlayerProps} from "../MusicPlayer/MusicPlayer";
+import { ButtonProps} from "../Button/Button";
+import { RegistryConsumer } from "@bem-react/di";
+import { MusicPlayer, MusicPlayerProps } from "../MusicPlayer/MusicPlayer";
 
 const cnEvent = cn('Event');
+const cnApp = cn('App');
+const cnButton = cn('Button');
 
 export interface EventData {
     temperature?: number,
@@ -72,8 +74,12 @@ export class Event extends React.Component<EventProps> {
                         { humidity && <div className={ cnEvent('Humidity') }>{ `Влажность: ` }<b>{ `${ humidity }%` }</b></div> }
                     </div> }
                     { buttons && <RegistryConsumer>
-                        {
-                            () => { return buttons.map((button: string, key: number) => <Button key={ key } { ...{ text: button} } />) }
+                        {registries => {
+                            const registry = registries[cnApp()];
+
+                            const Button = registry.get<ButtonProps>(cnButton());
+
+                            return buttons.map((button: string, key: number) => <Button key={ key } { ...{ text: button} } />) }
                         }
                     </RegistryConsumer>
                     }

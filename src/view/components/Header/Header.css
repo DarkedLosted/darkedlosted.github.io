@@ -39,13 +39,3 @@
     display: none;
     cursor: pointer;
 }
-
-@media(max-width: 755px)
-{
-    .Header-MobileMenuIcon
-    {
-        display: block;
-        float: right;
-        margin: 27px 14px auto auto;
-    }
-}

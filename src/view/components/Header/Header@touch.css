@@ -1,0 +1,30 @@
+.Header-MobileMenuIcon
+{
+    display: block;
+    float: right;
+    margin: 27px 14px auto auto;
+}
+
+.Header-TabsMenuTab
+{
+    display: none;
+}
+
+.Header-TabsMenu
+{
+    line-height: 0;
+    padding: 0;
+}
+
+.Header-Logo
+{
+    vertical-align: bottom;
+    padding: 0;
+    margin: 22px auto auto 20px;
+}
+
+header
+{
+    border: none;
+    height: 20px;
+}

@@ -1,3 +1,3 @@
 export * from './Event';
 
-import './Event@desktop.css';
+import './Event@touch.css';
