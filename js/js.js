@@ -209,7 +209,7 @@ function init() {
                     image.setAttribute('srcset', 'icons/pil.jpg 832w 1x, icons/pil-3x.jpg 2496w 3x');
                     image.setAttribute('sizes', '(max-width: 620px) 832px, (min-width: 1400) 2496px');
                     image.style.visibility = 'hidden';
-                    top.style.background = `url(${elem.data.image}) left center repeat-x / 100%`;
+                    top.style.background = `url(${elem.data.image}) center center no-repeat / 100%`;
 
                     addTouchInfoControls(description);
                 } else {

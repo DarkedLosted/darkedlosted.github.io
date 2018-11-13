@@ -121,6 +121,9 @@ header
     touch-action: none;
     border-radius: 20px;
     margin-top: 20px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
 }
 
 .slide-menu-bottom
@@ -496,9 +499,6 @@ main
     height: 100%;
     border-radius: 20px;
     margin-top: 20px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: none;
 }
 
 .card__additions

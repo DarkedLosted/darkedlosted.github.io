@@ -12,11 +12,13 @@
                 startDist: 0,
                 startAngle: 0,
                 startBrightness: 1,
-                brightness: 1
+                brightness: 1,
+                angleDiff: 0,
+                type: '',
+                currentZoom: 100
             };
 
         img.addEventListener('pointerdown', (event) => {
-
             eventCache[event.pointerId] = event;
 
             currentGesture = {
@@ -33,9 +35,10 @@
 
             if (pointersCount === 2) {
                 eventCache[event.pointerId] = event;
+
                 const events = Object.values(eventCache);
                 let curDiff = getDistanceBetweenPoints(events[0].clientX, events[0].clientY, events[1].clientX, events[1].clientY),
-                    angle = (180 + Math.round(Math.atan2(events[1].clientX - events[0].clientX, events[1].clientY - events[0].clientY) * 180 / Math.PI));
+                    angle = (Math.atan2(events[0].clientY - events[1].clientY, events[0].clientX - events[1].clientX) / Math.PI * 180);
 
                 if (!gestureState.startDist) {
                     gestureState.startDist = curDiff;
@@ -45,11 +48,20 @@
                 }
 
                 curDiff = curDiff - gestureState.startDist;
-                let angleDiff = angle - gestureState.startAngle;
+                const angleDiff = angle - gestureState.startAngle;
 
-                if(Math.abs(curDiff) > 16) {
+                if (!gestureState.type) {
+                    if (Math.abs(curDiff) > 24) {
+                        gestureState.type = 'zoom';
+                    } else if (Math.abs(angleDiff) > 16) {
+                        gestureState.type = 'rotate';
+                    }
+                }
+
+                if (gestureState.type === 'zoom') {
                     zoom(curDiff);
-                } else {
+                }
+                if (gestureState.type === 'rotate') {
                     rotate(angleDiff, angle);
                 }
             } else if (pointersCount === 1 ) {
@@ -63,6 +75,10 @@
         });
 
         addMultiEventListner(img, 'pointerup pointercancel pointerout pointerleave', (e) => {
+            gestureState.startBrightness = gestureState.brightness;
+            gestureState.startDist = 0;
+            gestureState.startAngle = 0;
+            gestureState.type = '';
             currentGesture = null;
             delete eventCache[e.pointerId];
         });
@@ -88,16 +104,17 @@
         let bgPositionX = parseInt(img.style.backgroundPositionX) || 0,
             rotateText = document.querySelector('.touch__rotate'),
             slideLength = bgPositionX + xDiff,
-            maxSlide = -((img.offsetWidth * 2) - img.parentNode.offsetWidth / 2 );
+            maxSlide = -((img.offsetWidth)),
+            maxSlideCoef = getZoomRatio(maxSlide);
 
         if (slideLength > 0) {
             slideLength = 0;
-        } else if (slideLength < maxSlide) {
-            slideLength = maxSlide;
+        } else if (slideLength < maxSlideCoef) {
+            slideLength = maxSlideCoef;
         }
 
         slideLength = Math.abs(slideLength);
-        maxSlide = Math.abs(maxSlide);
+        maxSlide = Math.abs(maxSlideCoef);
 
         img.style.backgroundPositionX = `${ -slideLength }px`;
         rotateText.innerText = `Поворот: ${ slideLength > maxSlide ? maxSlide.toFixed(1) : slideLength.toFixed(1) }px`;
@@ -111,7 +128,7 @@
     function rotate(angleDiff, angle) {
         let brightnessText = document.querySelector('.touch__brightness');
 
-        if (Math.abs(angleDiff - gestureState.angleDiff) > 200) {
+        if (Math.abs(angleDiff - gestureState.angleDiff) > 100) {
             gestureState.startBrightness = gestureState.brightness;
             gestureState.startAngle = angle;
             gestureState.angleDiff = 0;
@@ -119,8 +136,7 @@
         }
 
         gestureState.angleDiff = angleDiff;
-
-        let brightness = gestureState.startBrightness + angleDiff / 50;
+        let brightness = gestureState.startBrightness + angleDiff / 40;
 
         brightness = angleDiff < 0 ? Math.max(brightness, 0.1) : Math.min(brightness, 2);
 
@@ -130,15 +146,70 @@
     }
 
     /**
+     * Возвращает центральные координаты масштабируемой области
+     * @param e1
+     * @param e2
+     * @returns {{x: number, y: number}}
+     */
+    function getZoomCenter(e1, e2) {
+        const scale = gestureState.currentZoom / 100 ;
+        const imgProps = img.getBoundingClientRect();
+        const x = imgProps.width;
+        const y = imgProps.height;
+        const { offsetX: x1, offsetY: y1 } = e1;
+        const { offsetX: x2, offsetY: y2 } = e2;
+        const posX = x / 2 - ((x1 + x2) / 2) * scale;
+        const posY = y / 2 - ((y1 + y2) / 2) * scale;
+
+        return {
+            x: posX,
+            y: posY
+        };
+    }
+
+    /**
+     * Возвращает соотношение значения к текущему масштабу
+     * @param value
+     * @returns {number}
+     */
+    function getZoomRatio(value) {
+        return (gestureState.currentZoom - 100) * (value / 100);
+    }
+    
+    /**
      * Zoom области
      * @param diff
      */
     function zoom(diff) {
         let zoomText = document.querySelector('.touch__zoom'),
-            zoom = 100 + diff;
+            zoom =  gestureState.currentZoom + diff / 20;
 
         zoom = diff < 0 ? Math.max(zoom, 100) : Math.min(zoom, 250);
-        img.style.backgroundSize = `${zoom}%`;
+        gestureState.currentZoom = zoom;
+
+        const events = Object.values(eventCache);
+        const zoomPos = getZoomCenter(events[0], events[1]);
+        const imgW = -((img.offsetWidth));
+        const imgH = -((img.offsetHeight));
+        const zoomCoefX = getZoomRatio(imgW);
+        const zoomCoefY = getZoomRatio(imgH) - (imgH / (gestureState.currentZoom / 50));
+
+        if (zoomPos.x < zoomCoefX) {
+            zoomPos.x = zoomCoefX;
+        }
+        if (zoomPos.y < zoomCoefY) {
+            zoomPos.y = zoomCoefY;
+        }
+        if (zoomPos.x > 0) {
+            zoomPos.x = 0;
+        }
+        if (zoomPos.y > 0) {
+            zoomPos.y = 0;
+        }
+
+        img.style.backgroundPositionX = `${ zoomPos.x }px`;
+        img.style.backgroundPositionY = `${ zoomPos.y }px`;
+        img.style.backgroundSize = `${ zoom }%`;
         zoomText.innerText = `Приближение: ${ zoom.toFixed(1) }%`;
     }
 
@@ -147,7 +218,15 @@
      * @returns {boolean}
      */
     function isTouch() {
-        return (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0 || navigator.maxTouchPoints > 0)) || true;
+        const prefixes = " -webkit- -moz- -o- -ms- ".split(" ");
+        const mq = (query) => {
+            return window.matchMedia(query).matches;
+        };
+        if (("ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch)) {
+            return true;
+        }
+        const query = ["(", prefixes.join("touch-enabled),("), "heartz", ")"].join("");
+        return mq(query);
     }
 
     /**
