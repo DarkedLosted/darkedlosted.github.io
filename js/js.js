@@ -209,7 +209,7 @@ function init() {
                     image.setAttribute('srcset', 'icons/pil.jpg 832w 1x, icons/pil-3x.jpg 2496w 3x');
                     image.setAttribute('sizes', '(max-width: 620px) 832px, (min-width: 1400) 2496px');
                     image.style.visibility = 'hidden';
-                    top.style.background = `url(${elem.data.image})`;
+                    top.style.background = `url(${elem.data.image}) left center repeat-x / 100%`;
 
                     addTouchInfoControls(description);
                 } else {
@@ -265,8 +265,9 @@ function init() {
 
                 feed.appendChild(template.content)
 
-                loadGesturesScript(); // ждем ответа от сервера с events
+
             });
+    // loadGesturesScript(); // ждем ответа от сервера с events
         // })
        // .then(() => loadGesturesScript()); // ждем ответа от сервера с events
 }
@@ -328,7 +329,7 @@ function addTouchInfoControls(target) {
 
     touchZoom.innerText = 'Приближение: 100%';
     touchBrightness.innerText = 'Яркость: 100%';
-    touchRotate.innerText = 'Поворот: 100°';
+    touchRotate.innerText = 'Поворот: 0px';
 
     touchCard.className = 'card__touch';
     touchZoom.className = 'touch__zoom';

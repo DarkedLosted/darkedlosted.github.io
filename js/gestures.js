@@ -7,32 +7,64 @@
     if (isTouch()) {
         var img = document.querySelector('.error .additions__top'),
             currentGesture = null,
-            eventCache = [];
+            eventCache = {},
+            gestureState = {
+                startDist: 0,
+                startAngle: 0,
+                startBrightness: 1,
+                brightness: 1
+            };
 
         img.addEventListener('pointerdown', (event) => {
-            img.setPointerCapture(event.pointerId);
 
-            eventCache.push(event);
+            eventCache[event.pointerId] = event;
 
             currentGesture = {
-                startX: event.x,
-                prevX: event.x
-            }
-        });
-
-        img.addEventListener('pointerup', () => {
-            eventCache = [];
-            currentGesture = null;
+                startX: event.clientX
+            };
         });
 
         img.addEventListener('pointermove', (event) => {
-            if (eventCache.length === 2) {
-                doubleTouch(event);
-            } else if (eventCache.length === 1) {
-                singleTouch(event);
-            } else if (eventCache.length > 2) {
-                multiTouch(event);
+            const pointersCount = Object.keys(eventCache).length;
+
+            if (pointersCount === 0 || !currentGesture) {
+                return;
             }
+
+            if (pointersCount === 2) {
+                eventCache[event.pointerId] = event;
+                const events = Object.values(eventCache);
+                let curDiff = getDistanceBetweenPoints(events[0].clientX, events[0].clientY, events[1].clientX, events[1].clientY),
+                    angle = (180 + Math.round(Math.atan2(events[1].clientX - events[0].clientX, events[1].clientY - events[0].clientY) * 180 / Math.PI));
+
+                if (!gestureState.startDist) {
+                    gestureState.startDist = curDiff;
+                }
+                if (!gestureState.startAngle) {
+                    gestureState.startAngle = angle;
+                }
+
+                curDiff = curDiff - gestureState.startDist;
+                let angleDiff = angle - gestureState.startAngle;
+
+                if(Math.abs(curDiff) > 16) {
+                    zoom(curDiff);
+                } else {
+                    rotate(angleDiff, angle);
+                }
+            } else if (pointersCount === 1 ) {
+                const prevEvent = eventCache[event.pointerId];
+                const xDiff = event.clientX - prevEvent.clientX;
+
+                singleTouch(event, xDiff);
+
+                eventCache[event.pointerId] = event;
+            }
+        });
+
+        addMultiEventListner(img, 'pointerup pointercancel pointerout pointerleave', (e) => {
+            currentGesture = null;
+            delete eventCache[e.pointerId];
         });
     }
 
@@ -52,44 +84,62 @@
      * Прокрутка(поворот) изоображения(камеры)
      * @param event
      */
-    function singleTouch(event) {
+    function singleTouch(event, xDiff) {
         let bgPositionX = parseInt(img.style.backgroundPositionX) || 0,
             rotateText = document.querySelector('.touch__rotate'),
+            slideLength = bgPositionX + xDiff,
+            maxSlide = -((img.offsetWidth * 2) - img.parentNode.offsetWidth / 2 );
+
+        if (slideLength > 0) {
             slideLength = 0;
+        } else if (slideLength < maxSlide) {
+            slideLength = maxSlide;
+        }
 
-        img.style.backgroundPositionX = bgPositionX ? bgPositionX : '1px';
-        slideLength = currentGesture.startX < event.clientX ?
-            (bgPositionX + event.clientX * 0.1):
-            (bgPositionX - event.clientX * 0.1);
-        img.style.backgroundPositionX = Math.abs(parseInt(slideLength)) > img.width ? img.width + 'px' : slideLength + 'px';
+        slideLength = Math.abs(slideLength);
+        maxSlide = Math.abs(maxSlide);
 
-        rotateText.innerText = `Поворот: ${ Math.abs(bgPositionX) > 360 ? 360 : bgPositionX }°`;
+        img.style.backgroundPositionX = `${ -slideLength }px`;
+        rotateText.innerText = `Поворот: ${ slideLength > maxSlide ? maxSlide.toFixed(1) : slideLength.toFixed(1) }px`;
     }
 
     /**
      * Изменение яркости
-     * @param event
+     * @param angleDiff
+     * @param angle
      */
-    function doubleTouch(event) {
-        let brightnessValue = (Math.atan(event.clientY / event.clientX) * 180 / Math.PI) / 100,
-            brightnessText = document.querySelector('.touch__brightness');
+    function rotate(angleDiff, angle) {
+        let brightnessText = document.querySelector('.touch__brightness');
 
-        brightnessValue = brightnessValue < 0.1 ? 0.1 : (brightnessValue > 2 ? 2 : brightnessValue);
-        img.style.filter = `brightness(${ brightnessValue })`;
-        brightnessText.innerText = `Яркость: ${ brightnessValue * 100 }%`;
+        if (Math.abs(angleDiff - gestureState.angleDiff) > 200) {
+            gestureState.startBrightness = gestureState.brightness;
+            gestureState.startAngle = angle;
+            gestureState.angleDiff = 0;
+            return;
+        }
+
+        gestureState.angleDiff = angleDiff;
+
+        let brightness = gestureState.startBrightness + angleDiff / 50;
+
+        brightness = angleDiff < 0 ? Math.max(brightness, 0.1) : Math.min(brightness, 2);
+
+        gestureState.brightness = brightness;
+        img.style.filter = `brightness(${ brightness })`;
+        brightnessText.innerText = `Яркость: ${ (brightness * 100).toFixed(1) }%`;
     }
 
     /**
      * Zoom области
-     * @param event
+     * @param diff
      */
-    function multiTouch(event) {
-        let bgPositionX = parseInt(img.style.backgroundSize) || 0,
-            zoomText = document.querySelector('.touch__zoom');
+    function zoom(diff) {
+        let zoomText = document.querySelector('.touch__zoom'),
+            zoom = 100 + diff;
 
-        img.style.backgroundSize = bgPositionX ?
-            (bgPositionX + event.clientX)+ 'px ' + (bgPositionX + event.clientX) + 'px' : '1px';
-        zoomText.innerText = `Приближение: ${ bgPositionX / 100 }%`;
+        zoom = diff < 0 ? Math.max(zoom, 100) : Math.min(zoom, 250);
+        img.style.backgroundSize = `${zoom}%`;
+        zoomText.innerText = `Приближение: ${ zoom.toFixed(1) }%`;
     }
 
     /**
@@ -98,5 +148,19 @@
      */
     function isTouch() {
         return (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0 || navigator.maxTouchPoints > 0)) || true;
+    }
+
+    /**
+     * Подписка на несколько событий
+     * @param element
+     * @param eventNames
+     * @param callback
+     */
+    function addMultiEventListner(element, eventNames, callback) {
+        const events = eventNames.split(' ');
+
+        for (let i = 0; i < events.length; i++) {
+            element.addEventListener(events[i], callback);
+        }
     }
 })();
