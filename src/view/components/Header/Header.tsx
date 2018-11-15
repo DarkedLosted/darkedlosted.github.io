@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { cn } from '@bem-react/classname';
 
-// import './Header.css';
 import logo from '../../../icons/logo.jpg';
 import mobileMenu from '../../../icons/icon_list_m.jpg';
 
@@ -30,7 +29,10 @@ export class Header extends React.Component {
                         <li className={ cnHeader('Tab') }>
                             <a className={ cnLink() } href='#'>Видеонаблюдение</a>
                         </li>
-                        <img className={ cnHeader('MobileMenuIcon') } src={ mobileMenu } alt='three black lines like burger' />
+                        <img
+                            className={ cnHeader('MobileMenuIcon') }
+                            src={ mobileMenu } alt='three black lines like burger'
+                        />
                     </ul>
                 </section>
             </header>

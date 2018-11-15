@@ -1,3 +1,3 @@
-export * from './Button';
+export * from './index';
 
 import './Button@touch.css';

@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { App as AppCommon } from './App';
 import { EventFeed } from '../EventFeed/EventFeed@desktop';
 import { Event } from '../Event/Event@desktop';
-import { Button } from "../Button/Button";
+import { Button } from "../Button/index";
 import { Footer } from "../Footer/Footer@desktop";
 import { Header } from "../Header/Header@desktop";
 

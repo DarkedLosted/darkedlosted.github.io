@@ -5,7 +5,7 @@ import './Event.css';
 import closeIcon from '../../../icons/cross.svg';
 import closeWhiteIcon from '../../../icons/cross-white.svg';
 import nextIcon from '../../../icons/next-black.svg';
-import { ButtonProps} from "../Button/Button";
+import { ButtonProps } from "../Button/index";
 import { RegistryConsumer } from "@bem-react/di";
 import { MusicPlayer, MusicPlayerProps } from "../MusicPlayer/MusicPlayer";
 
@@ -58,20 +58,37 @@ export class Event extends React.Component<EventProps> {
 
         return (
             <article className={ cnEvent({ size: event.size, error: event.type === 'critical' }) }>
-                <img src={ event.type === 'critical' ? closeWhiteIcon : closeIcon } title='Закрыть' className={ cnEvent('Cross') }/>
+                <img
+                    src={ event.type === 'critical' ? closeWhiteIcon : closeIcon }
+                    title='Закрыть'
+                    className={ cnEvent('Cross') }
+                />
                 <div className={ cnEvent('Header') }>
                     <img className={ cnEvent('Icon') } src={ icon } title='' alt=''/>
                     <div className={ cnEvent('Title') }>{ event.title }</div>
                     <div className={ cnEvent('Source') }>{ event.source }</div>
                     <time className={ cnEvent('Time') }>{ event.time }</time>
                 </div>
-                { description && <div className={ cnEvent('Description') }>
+                { description &&
+                    <div className={ cnEvent('Description') }>
                     { event.description }
-                    { additions && <div className={ cnEvent('Additions') }>
+                    { additions &&
+                        <div className={ cnEvent('Additions') }>
                         <div className={ cnEvent('Top') } />
-                        { (image || graph) && <img touch-action='none' className={ cnEvent('Image') } src={ require(`../../../icons/${ graph ? 'Richdata.jpg' : image }`) } /> }
-                        { temperature && <div className={ cnEvent('Temperature') }>{ `Температура: ` }<b>{ `${ temperature } C` }</b></div> }
-                        { humidity && <div className={ cnEvent('Humidity') }>{ `Влажность: ` }<b>{ `${ humidity }%` }</b></div> }
+                        { (image || graph) &&
+                            <img
+                                touch-action='none'
+                                className={ cnEvent('Image') }
+                                src={ require(`../../../icons/${ graph ? 'Richdata.jpg' : image }`) }
+                            /> }
+                        { temperature &&
+                            <div className={ cnEvent('Temperature') }>
+                                { `Температура: ` }<b>{ `${ temperature } C` }</b>
+                            </div> }
+                        { humidity &&
+                            <div className={ cnEvent('Humidity') }>
+                                { `Влажность: ` }<b>{ `${ humidity }%` }</b>
+                            </div> }
                     </div> }
                     { buttons && <RegistryConsumer>
                         {registries => {
@@ -79,13 +96,24 @@ export class Event extends React.Component<EventProps> {
 
                             const Button = registry.get<ButtonProps>(cnButton());
 
-                            return buttons.map((button: string, key: number) => <Button key={ key } { ...{ text: button} } />) }
+                            return buttons.map((button: string, key: number) =>
+                                <Button
+                                    key={ key }
+                                    type={ button === 'Да' ? 'accept' : undefined }
+                                    { ...{ className: cnButton(), text: button} }
+                                />) }
                         }
                     </RegistryConsumer>
                     }
                 </div> }
-                <img src={ nextIcon } title='Перейти' alt='next' className={ cnEvent('Next') }/>
-                { mediaPlayer && <MusicPlayer { ...event.data as MusicPlayerProps} /> }
+                <img
+                    src={ nextIcon }
+                    title='Перейти'
+                    alt='next'
+                    className={ cnEvent('Next') }
+                />
+                { mediaPlayer &&
+                    <MusicPlayer { ...event.data as MusicPlayerProps} /> }
             </article>
         )
     }

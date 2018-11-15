@@ -29,20 +29,38 @@ export class MusicPlayer extends React.Component<MusicPlayerProps> {
         return (
             <div className={ cnMusicPlayer() }>
                 <div className={ cnMusicPlayer('Header') }>
-                    <img className={ cnMusicPlayer('Icon') } src={ `${ player.albumcover }` } alt='album'/>
+                    <img
+                        className={ cnMusicPlayer('Icon') }
+                        src={ `${ player.albumcover }` }
+                        alt='album'
+                    />
                     <div className={ cnMusicPlayer('Song') }>
-                        <label className={ cnMusicPlayer('SongName') }>{ `${ player.artist } - ${ player.track.name }`}</label>
+                        <label className={ cnMusicPlayer('SongName') }>
+                            { `${ player.artist } - ${ player.track.name }`}
+                        </label>
                         <div className={ cnMusicPlayer('SongControl') }>
                             <input type='range' min='0' className={ cnMusicPlayer('ControlSlider') }/>
-                            <span className={ cnMusicPlayer('ControlTime') }>{ player.track.length }</span>
+                            <span className={ cnMusicPlayer('ControlTime') }>
+                                { player.track.length }
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div className={ cnMusicPlayer('Controls') }>
-                    <img className={ cnMusicPlayer('ControlsPrev') } src={ prevIcon } alt='Previous'/>
-                    <img className={ cnMusicPlayer('ControlsNext') } src={ nextIcon } alt='Next'/>
+                    <img
+                        className={ cnMusicPlayer('ControlsPrev') }
+                        src={ prevIcon }
+                        alt='Previous'
+                    />
+                    <img
+                        className={ cnMusicPlayer('ControlsNext') }
+                        src={ nextIcon }
+                        alt='Next'
+                    />
                     <input type='range' min='0' max='100' className={ cnMusicPlayer('ControlsSlider') }/>
-                    <span className={ cnMusicPlayer('ControlsVolume') }>{ `${ player.volume }%` }</span>
+                    <span className={ cnMusicPlayer('ControlsVolume') }>
+                        { `${ player.volume }%` }
+                    </span>
                 </div>
             </div>
         )
