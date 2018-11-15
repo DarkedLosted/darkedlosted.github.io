@@ -24,57 +24,17 @@
             currentGesture = {
                 startX: event.clientX
             };
-        });
 
-        img.addEventListener('pointermove', (event) => {
-            const pointersCount = Object.keys(eventCache).length;
-
-            if (pointersCount === 0 || !currentGesture) {
-                return;
-            }
-
-            if (pointersCount === 2) {
-                eventCache[event.pointerId] = event;
-
-                const events = Object.values(eventCache);
-                let curDiff = getDistanceBetweenPoints(events[0].clientX, events[0].clientY, events[1].clientX, events[1].clientY),
-                    angle = (Math.atan2(events[0].clientY - events[1].clientY, events[0].clientX - events[1].clientX) / Math.PI * 180);
-
-                if (!gestureState.startDist) {
-                    gestureState.startDist = curDiff;
-                }
-                if (!gestureState.startAngle) {
-                    gestureState.startAngle = angle;
-                }
-
-                curDiff = curDiff - gestureState.startDist;
-                const angleDiff = angle - gestureState.startAngle;
-
-                if (!gestureState.type) {
-                    if (Math.abs(curDiff) > 24) {
-                        gestureState.type = 'zoom';
-                    } else if (Math.abs(angleDiff) > 16) {
-                        gestureState.type = 'rotate';
-                    }
-                }
-
-                if (gestureState.type === 'zoom') {
-                    zoom(curDiff);
-                }
-                if (gestureState.type === 'rotate') {
-                    rotate(angleDiff, angle);
-                }
-            } else if (pointersCount === 1 ) {
-                const prevEvent = eventCache[event.pointerId];
-                const xDiff = event.clientX - prevEvent.clientX;
-
-                singleTouch(event, xDiff);
-
-                eventCache[event.pointerId] = event;
+            if (!eventCache.length) {
+                img.addEventListener('pointermove', pointerMoveHandler);
             }
         });
 
         addMultiEventListner(img, 'pointerup pointercancel pointerout pointerleave', (e) => {
+            if (eventCache.length <= 1) {
+                img.removeEventListener('pointermove', pointerMoveHandler);
+            }
+
             gestureState.startBrightness = gestureState.brightness;
             gestureState.startDist = 0;
             gestureState.startAngle = 0;
@@ -82,6 +42,54 @@
             currentGesture = null;
             delete eventCache[e.pointerId];
         });
+    }
+
+    function pointerMoveHandler(event) {
+        const pointersCount = Object.keys(eventCache).length;
+
+        if (pointersCount === 0 || !currentGesture) {
+            return;
+        }
+
+        if (pointersCount === 2) {
+            eventCache[event.pointerId] = event;
+
+            const events = Object.values(eventCache);
+            let curDiff = getDistanceBetweenPoints(events[0].clientX, events[0].clientY, events[1].clientX, events[1].clientY),
+            angle = (Math.atan2(events[0].clientY - events[1].clientY, events[0].clientX - events[1].clientX) / Math.PI * 180);
+
+            if (!gestureState.startDist) {
+                gestureState.startDist = curDiff;
+            }
+            if (!gestureState.startAngle) {
+                gestureState.startAngle = angle;
+            }
+
+            curDiff = curDiff - gestureState.startDist;
+            const angleDiff = angle - gestureState.startAngle;
+
+            if (!gestureState.type) {
+                if (Math.abs(curDiff) > 24) {
+                    gestureState.type = 'zoom';
+                } else if (Math.abs(angleDiff) > 16) {
+                    gestureState.type = 'rotate';
+                }
+            }
+
+            if (gestureState.type === 'zoom') {
+                zoom(curDiff);
+            }
+            if (gestureState.type === 'rotate') {
+                rotate(angleDiff, angle);
+            }
+            } else if (pointersCount === 1 ) {
+                const prevEvent = eventCache[event.pointerId];
+                const xDiff = event.clientX - prevEvent.clientX;
+
+                singleTouch(event, xDiff);
+
+                eventCache[event.pointerId] = event;
+        }
     }
 
     /**
