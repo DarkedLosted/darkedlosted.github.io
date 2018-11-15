@@ -2,10 +2,11 @@ import * as React from 'react';
 import { cn } from '@bem-react/classname';
 
 // import './Header.css';
-import logo from '../icons/logo.jpg';
-import mobileMenu from '../icons/icon_list_m.jpg';
+import logo from '../../../icons/logo.jpg';
+import mobileMenu from '../../../icons/icon_list_m.jpg';
 
 const cnHeader = cn('Header');
+const cnLink = cn('Link');
 
 export class Header extends React.Component {
     public render() {
@@ -14,20 +15,20 @@ export class Header extends React.Component {
                 <section>
                     <ul className={ cnHeader('TabsMenu') }>
                         <img className={ cnHeader('Logo') } src={ logo } alt='yandex' />
-                        <li className={ cnHeader('TabsMenuTab') }>
-                            <a className={'Link Link_selected'} href='#'>События</a>
+                        <li className={ cnHeader('Tab') }>
+                            <a className={ cnLink({ selected: true }) } href='#'>События</a>
                         </li>
-                        <li className={ cnHeader('TabsMenuTab') }>
-                            <a className={'Link'} href='#'>Сводка</a>
+                        <li className={ cnHeader('Tab') }>
+                            <a className={ cnLink() } href='#'>Сводка</a>
                         </li>
-                        <li className={ cnHeader('TabsMenuTab') }>
-                            <a className={'Link'} href='#'>Устройства</a>
+                        <li className={ cnHeader('Tab') }>
+                            <a className={ cnLink() } href='#'>Устройства</a>
                         </li>
-                        <li className={ cnHeader('TabsMenuTab') }>
-                            <a className={'Link'} href='#'>Сценарии</a>
+                        <li className={ cnHeader('Tab') }>
+                            <a className={ cnLink() } href='#'>Сценарии</a>
                         </li>
-                        <li className={ cnHeader('TabsMenuTab') }>
-                            <a className={'Link'} href='#'>Видеонаблюдение</a>
+                        <li className={ cnHeader('Tab') }>
+                            <a className={ cnLink() } href='#'>Видеонаблюдение</a>
                         </li>
                         <img className={ cnHeader('MobileMenuIcon') } src={ mobileMenu } alt='three black lines like burger' />
                     </ul>

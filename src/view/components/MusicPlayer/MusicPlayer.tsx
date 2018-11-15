@@ -2,8 +2,8 @@ import * as React from 'react';
 import { cn } from '@bem-react/classname';
 
 import './MusicPlayer.css';
-import prevIcon from '../icons/Prev.svg';
-import nextIcon from '../icons/Next.svg';
+import prevIcon from '../../../icons/Prev.svg';
+import nextIcon from '../../../icons/Next.svg';
 
 const cnMusicPlayer = cn('MusicPlayer');
 

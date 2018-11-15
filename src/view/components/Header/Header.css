@@ -22,12 +22,12 @@
     font-weight: bold;
 }
 
-.Header-TabsMenu_selected
+.Link_selected
 {
-    color: black !important;
+    color: black;
 }
 
-.Header-TabsMenuTab
+.Header-Tab
 {
     display: table-cell;
     padding: 37px 28px 37px 0;

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { cn } from '@bem-react/classname';
 
 import './Event.css';
-import closeIcon from '../icons/cross.svg';
-import closeWhiteIcon from '../icons/cross-white.svg';
-import nextIcon from '../icons/next-black.svg';
+import closeIcon from '../../../icons/cross.svg';
+import closeWhiteIcon from '../../../icons/cross-white.svg';
+import nextIcon from '../../../icons/next-black.svg';
 import { ButtonProps} from "../Button/Button";
 import { RegistryConsumer } from "@bem-react/di";
 import { MusicPlayer, MusicPlayerProps } from "../MusicPlayer/MusicPlayer";
@@ -46,7 +46,7 @@ export class Event extends React.Component<EventProps> {
 
     public render() {
         const event = {...this.props};
-        const icon = require(`../icons/${ event.icon }.svg`);
+        const icon = require(`../../../icons/${ event.icon }.svg`);
         const additions = event.data;
         const temperature = event.data && event.data.temperature;
         const humidity = event.data && event.data.humidity;
@@ -69,7 +69,7 @@ export class Event extends React.Component<EventProps> {
                     { event.description }
                     { additions && <div className={ cnEvent('Additions') }>
                         <div className={ cnEvent('Top') } />
-                        { (image || graph) && <img touch-action='none' className={ cnEvent('Image') } src={ require(`../icons/${ graph ? 'Richdata.jpg' : image }`) } /> }
+                        { (image || graph) && <img touch-action='none' className={ cnEvent('Image') } src={ require(`../../../icons/${ graph ? 'Richdata.jpg' : image }`) } /> }
                         { temperature && <div className={ cnEvent('Temperature') }>{ `Температура: ` }<b>{ `${ temperature } C` }</b></div> }
                         { humidity && <div className={ cnEvent('Humidity') }>{ `Влажность: ` }<b>{ `${ humidity }%` }</b></div> }
                     </div> }
